@@ -1,0 +1,62 @@
+<div class="overlay">
+  <div class="row no-gutters login_row">
+    <div class="col-sm-12 col-md-6 offset-md-3 login_row_col">
+      <div class="d-flex flex-column align-items-center justify-content-center login_flexwrap">
+        <div id="popupMenuContainer" class="d-flex flex-column align-items-start popupMenuContainer">
+        
+          <% flash.each do |message_type, message| %>
+          <%= content_tag(:div, message, class: "login_alert") %>
+          <% end %>
+
+
+          <div id="signupcontainer" class="greeting-container">
+            <%= render 'sessions/signup_form' %>  
+          </div>
+
+          <div id="logincontainer" class="greeting-container">
+            <%= render 'sessions/login_form' %>
+          </div>  
+
+          <div id="recoveryContainer" class="greeting-container">
+            <%= render 'sessions/recovery_form' %>
+          </div>        
+         
+
+        </div> 
+      </div>
+    </div>
+  </div>  
+</div>
+
+<script type="text/javascript"> 
+
+  let panelId = "";
+
+  if(sessionStorage) panelId = sessionStorage.getItem("greetingStatus");
+ 
+  const setPanelState = (panelId, duration = "1s", clearAlerts = false)=>{
+    $(".greeting-container").hide();
+
+    let container = document.getElementById("popupMenuContainer")
+    container.style.transitionDuration = duration;
+
+    let panel = document.getElementById(panelId)
+
+    if(panel instanceof HTMLElement){
+      $(panel).fadeIn();
+      container.style.height = parseInt(window.getComputedStyle(panel).height ) + 60 + "px"
+    } else $("#logincontainer").fadeIn();       
+
+    if(sessionStorage) sessionStorage.setItem("greetingStatus",panelId)
+
+    if(clearAlerts) $(".login_alert").remove()   
+  } 
+
+  $(".signup-link").on("click",(e)=> setPanelState("signupcontainer","1s",true))
+  $(".login-link").on("click",(e)=>setPanelState("logincontainer","1s",true))
+  $(".password_recovery").on("click",(e)=>setPanelState("recoveryContainer","1s",true)) 
+
+   //init first panel
+  setPanelState(panelId,"0s")
+
+</script>

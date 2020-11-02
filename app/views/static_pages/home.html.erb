@@ -1,0 +1,9 @@
+<% if user_signed_in? %>
+  <%# redirect to user customer list %>
+
+  <% else %>
+  <%# show sign in form %>
+  <%= render "sessions/greeting_form"%>
+
+
+<% end %>

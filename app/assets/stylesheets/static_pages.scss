@@ -1,0 +1,115 @@
+// Place all the styles related to the static_pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+
+// Place all the styles related to the static_pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+
+.overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top:0;
+  bottom: 0; 
+  background: rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+}
+
+.login_row_col{
+  height: 100%; 
+ 
+}
+.login_row{
+  height: 100%;
+  width: 100%;
+}
+
+.login_flexwrap{
+height: auto;
+width: 100%;
+overflow: visible;
+}
+
+.new_user {
+  width: 100%;
+  height: 100%;
+}
+
+.login_alert {
+  color: red;
+  margin: 0px;
+  padding: 0px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-username {
+  color: white;
+  margin:0px 10px 0px 10px;
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.popupMenuContainer {
+  border: 5px solid black;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  min-width: 230px;  
+  flex-shrink: 1;
+  flex-grow: 1;
+  transition-duration: 1s;
+  height:450px;
+  padding: 10px;
+  > div{
+    width: 100%;
+  }
+  overflow: hidden;
+}
+
+.login_field_labels {
+  text-align: left;
+}
+
+.login_title {
+margin: 10px;
+text-align: center;
+font-size: 24pt;
+}
+
+.login_body {
+  margin: 10px;
+}
+.login_footer{
+  padding: 20px;
+  width:100%
+}
+
+.login_submit {
+  width:75%;
+  max-width: 300px;
+  margin-top: 30px;
+}
+
+.signup-link {
+  float: right;
+  cursor: pointer;
+}
+
+.login-link {
+  float: right;
+  cursor: pointer;
+}
+
+.login_recovery{
+  float: left;
+  cursor: pointer;
+}
+.recovery_submit{
+  min-width: 300px;
+}
