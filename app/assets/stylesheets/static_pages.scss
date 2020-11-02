@@ -64,7 +64,7 @@ overflow: visible;
   flex-shrink: 1;
   flex-grow: 1;
   transition-duration: 1s;
-  height:450px;
+  height:500px;
   padding: 10px;
   > div{
     width: 100%;
@@ -106,10 +106,16 @@ font-size: 24pt;
   cursor: pointer;
 }
 
-.login_recovery{
+.recovery-link{
   float: left;
   cursor: pointer;
 }
 .recovery_submit{
   min-width: 300px;
+}
+
+
+#error_explanation h2{
+font-size: 15pt;
+color:red;
 }

@@ -19,8 +19,11 @@
 
           <div id="recoveryContainer" class="greeting-container">
             <%= render 'sessions/recovery_form' %>
-          </div>        
-         
+          </div>   
+
+          <div id="recovery_confirmationContainer" class="greeting-container">
+            <%= render 'sessions/recovery_confirmation' %>
+          </div> 
 
         </div> 
       </div>
@@ -29,7 +32,11 @@
 </div>
 
 <script type="text/javascript"> 
+  let reset = <%= @reset%>
+  let panel = "<%= @panel%>"
 
+
+  console.log(reset)
   let panelId = "";
 
   if(sessionStorage) panelId = sessionStorage.getItem("greetingStatus");
@@ -50,13 +57,33 @@
     if(sessionStorage) sessionStorage.setItem("greetingStatus",panelId)
 
     if(clearAlerts) $(".login_alert").remove()   
+
+    var queryParams = new URLSearchParams(window.location.search);
+    queryParams.set("panel",panelId);
+    history.replaceState(null, null, "?"+queryParams.toString());
   } 
 
   $(".signup-link").on("click",(e)=> setPanelState("signupcontainer","1s",true))
   $(".login-link").on("click",(e)=>setPanelState("logincontainer","1s",true))
-  $(".password_recovery").on("click",(e)=>setPanelState("recoveryContainer","1s",true)) 
+  $(".recovery-link").on("click",(e)=>setPanelState("recoveryContainer","1s",true)) 
+
+
 
    //init first panel
-  setPanelState(panelId,"0s")
+  if(reset === 1){
+    setPanelState("logincontainer","0s")
+  }else{
+    if(panel !== ""){
+      if(panel === "password_reset"){
+        setPanelState("recovery_confirmationContainer","0s") 
+      }else{
+        setPanelState(panel,"0s") 
+      }
+    }else{
+       setPanelState(panelId,"0s")
+    }
+  }
+  
+ 
 
 </script>

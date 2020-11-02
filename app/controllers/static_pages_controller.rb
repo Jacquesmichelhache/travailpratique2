@@ -1,7 +1,22 @@
 class StaticPagesController < ApplicationController
 
-  def home
-    
+  def home()
+    if params[:reset] == nil then
+      @reset = 0
+
+      
+      if params[:panel] == nil then
+        @panel = ""
+      else
+        @panel = params[:panel]
+      end
+
+    else
+      @reset = params[:reset]
+    end
+   
+   
+
     if user_signed_in?     
       #redirect to user customer list
     else      
@@ -13,6 +28,7 @@ class StaticPagesController < ApplicationController
   end
 
   def password_reset
+   
 
   end
 
@@ -20,5 +36,5 @@ class StaticPagesController < ApplicationController
 
   end
 
-  
+
 end

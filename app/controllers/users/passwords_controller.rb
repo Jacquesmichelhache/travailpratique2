@@ -22,10 +22,14 @@ class Users::PasswordsController < Devise::PasswordsController
     end
   end
 
-  # GET /resource/password/edit?reset_password_token=abcdef
-  # def edit
-  #   super
-  # end
+  #GET /resource/password/edit?reset_password_token=abcdef
+  def edit
+    self.resource = resource_class.new
+    set_minimum_password_length
+    resource.reset_password_token = params[:reset_password_token]
+
+   # redirect_to root_path(panel:"password_edit")    
+  end
 
   # PUT /resource/password
   # def update
@@ -39,7 +43,9 @@ class Users::PasswordsController < Devise::PasswordsController
 
   #The path used after sending reset password instructions
   def after_sending_reset_password_instructions_path_for(resource_name)
-    session[:password_reset] = "true"
-    root_path
+    #session[:password_reset] = "true"
+    #root_path
+    root_path(panel:"password_reset")
+    
   end
 end
