@@ -8,9 +8,11 @@ require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
 require('jquery')
+global.agGrid = require('ag-grid-community')
 
 // import the bootstrap javascript module
 import "bootstrap"
+
 
 
 global.jQuery, global.$ = require("jquery");

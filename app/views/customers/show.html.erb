@@ -1,0 +1,51 @@
+<% provide(:title, "contacts") %>
+
+<div name="header" class="login_title">  
+      Customer list
+</div>
+
+<div id="customer_grid" class="ag-theme-alpine" style="width:100%"></div>
+
+
+
+<script type="text/javascript"> 
+
+
+  function listControls () {}
+
+  listControls.prototype.init = function(params){
+
+    this.deletButton = document.createElement("button");
+    this.deletButton.className = "btn btn-sm";
+    this.deletButton.textContent = "delete";
+  }
+  listControls.prototype.getGui = function(){
+    return this.deleteButton;
+  }
+
+  DeleteCellRenderer = function(params){
+    let deletButton = document.createElement("button");
+    deletButton.className = "btn btn-sm";
+    deletButton.textContent = "delete"; 
+    return deletButton;
+  }
+
+  let columnDefs = JSON.parse('<%= raw(@coldef_arr.to_json) %>');
+  columnDefs.push({"headerName":"Delete", width:100,cellRenderer:"DeleteCellRenderer"})
+
+  let gridOptions = {
+    columnDefs: columnDefs,
+    rowData: JSON.parse('<%= raw(@customer_data) %>'),
+    domLayout:"autoHeight",
+    components:{
+      DeleteCellRenderer:DeleteCellRenderer
+    }
+  };
+
+
+  document.addEventListener('DOMContentLoaded', function(){
+    let gridDiv = document.querySelector('#customer_grid');
+    new agGrid.Grid(gridDiv, gridOptions);
+  });
+
+</script>

@@ -18,5 +18,6 @@ Rails.application.routes.draw do
  
   get '/logout', to: 'static_pages#logout'  
   get '/password_reset', to: 'static_pages#password_reset'
- 
+  get '/customers', to: 'customers#show'
+
 end

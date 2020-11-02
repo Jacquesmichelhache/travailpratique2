@@ -10,3 +10,22 @@
 User.create!(email: "jacques_m16@hotmail.com",
   password: "123456",
   password_confirmation: "123456")
+
+  
+  Customer.create!(name: "bercomac",
+  relationshipstart: Time.zone.now,
+  addresscity: "addresscity",
+  addresspostalcode: "addresspostalcode",
+  addressstreet: "addressstreet",
+  addressapt: "addressapt",
+  activitytype: Customer::activitytypes[:active],
+  infoemail: "infoemail")
+
+  Customer.create!(name: "Usinage STI",
+  relationshipstart: Time.zone.now,
+  addresscity: "addresscity",
+  addresspostalcode: "addresspostalcode",
+  addressstreet: "addressstreet",
+  addressapt: "addressapt",
+  activitytype: Customer::activitytypes[:active],
+  infoemail: "infoemail")

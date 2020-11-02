@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_02_135705) do
+ActiveRecord::Schema.define(version: 2020_11_02_180857) do
+
+  create_table "customers", force: :cascade do |t|
+    t.string "name", default: ""
+    t.datetime "relationshipstart", null: false
+    t.string "addresscity", default: ""
+    t.string "addresspostalcode", default: ""
+    t.string "addressstreet", default: ""
+    t.string "addressapt", default: ""
+    t.integer "activitytype", default: 0
+    t.string "infoemail", default: ""
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
