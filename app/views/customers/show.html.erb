@@ -4,16 +4,24 @@
       Customer list
 </div>
 
-<div class="d-flex flex-row align-items-center customer-filter-ctn"> 
-  <input id="customer_filter" type="text" placeholder="filter.." class="form-control" > 
+<div class="d-flex flex-row align-items-end justify-content-between"> 
+  <input id="customer_filter" type="text" placeholder="filter.." class="form-control customer-filter-input" > 
+  <button id="newCustomerBtn" class="btn btn-sm btn-dark">New Customer</button>
 </div>
 
-<div id="customer_grid" class="ag-theme-alpine" style="width:auto;border:none"></div>
+<div id="customer_grid" class="ag-theme-alpine" style="width:auto;border:none;margin-top:20px"></div>
 
-
+<div id="newCustomerContainer" style="display:none">
+   <%= render 'customers/new_customer' %>
+</div>
 
 <script type="text/javascript"> 
   
+
+  $("#newCustomerBtn").on("click",()=>{
+     $("#newCustomerContainer").fadeIn()
+  });
+
  
 
   ControlsCellRenderer = function(params){
