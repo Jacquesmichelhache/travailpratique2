@@ -10,6 +10,8 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
       t.integer :activitytype, default: 0
       t.string :infoemail, default: ""  
      
+      t.references :user, null: false, foreign_key: true   
+
       t.timestamps
     end
   end

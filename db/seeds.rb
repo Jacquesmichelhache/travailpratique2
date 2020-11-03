@@ -7,12 +7,16 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Create a main sample user.
-User.create!(email: "jacques_m16@hotmail.com",
+User.create!(
+  email: "jacques_m16@hotmail.com",
   password: "123456",
   password_confirmation: "123456")
 
   
-  Customer.create!(name: "bercomac",
+
+user = User.first
+
+user.customers.create!(name: "bercomac",
   relationshipstart: Time.zone.now,
   addresscity: "addresscity",
   addresspostalcode: "addresspostalcode",
@@ -21,7 +25,7 @@ User.create!(email: "jacques_m16@hotmail.com",
   activitytype: Customer::activitytypes[:active],
   infoemail: "infoemail")
 
-  Customer.create!(name: "Usinage STI",
+user.customers.create!(name: "Usinage STI",
   relationshipstart: Time.zone.now,
   addresscity: "addresscity",
   addresspostalcode: "addresspostalcode",
@@ -30,11 +34,11 @@ User.create!(email: "jacques_m16@hotmail.com",
   activitytype: Customer::activitytypes[:active],
   infoemail: "infoemail")
 
-  Customer.create!(name: "Precicom",
-    relationshipstart: Time.zone.now,
-    addresscity: "addresscity",
-    addresspostalcode: "addresspostalcode",
-    addressstreet: "addressstreet",
-    addressapt: "addressapt",
-    activitytype: Customer::activitytypes[:active],
-    infoemail: "infoemail")
+user.customers.create!(name: "Precicom",
+  relationshipstart: Time.zone.now,
+  addresscity: "addresscity",
+  addresspostalcode: "addresspostalcode",
+  addressstreet: "addressstreet",
+  addressapt: "addressapt",
+  activitytype: Customer::activitytypes[:active],
+  infoemail: "infoemail")

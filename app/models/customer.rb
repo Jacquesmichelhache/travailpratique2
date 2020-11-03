@@ -1,4 +1,8 @@
 class Customer < ApplicationRecord
+  belongs_to :user
+
+  has_many :contact, dependent: :restrict_with_error 
+
   enum activitytype: { active: 0, archived: 1 }
 
 

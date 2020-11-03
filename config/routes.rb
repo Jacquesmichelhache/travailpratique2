@@ -14,10 +14,11 @@ Rails.application.routes.draw do
           passwords:'users/passwords'}    
 
 
- 
+
   get '/logout', to: 'static_pages#logout'  
   get '/password_reset', to: 'static_pages#password_reset'
   get '/customers', to: 'customers#show'
+
   delete '/customers/delete', to: 'customers#destroy'
   
 end
