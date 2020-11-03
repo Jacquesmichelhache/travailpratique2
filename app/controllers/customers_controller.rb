@@ -14,14 +14,14 @@ class CustomersController < ApplicationController
     
     begin
       current_user.customers.find(id).destroy        
-      render  json:{:id => id, operation_status:"success", error_message:"customer successfully removed"}    
+      render  json:{operation_status:"success", error_message:"customer successfully removed"}    
 
     rescue ActiveRecord::RecordNotFound
-      render  json:{:id => id, operation_status:"error", error_message:"customer not found in database"}
+      render  json:{ operation_status:"error", error_message:"customer not found in database"}
     rescue ActiveRecord::DeleteRestrictionError 
-      render  json:{:id => id, operation_status:"error", error_message:"Cannot remove a customer with contacts"}
+      render  json:{ operation_status:"error", error_message:"Cannot remove a customer with contacts"}
     rescue ActiveRecord::RecordNotDestroyed
-      render  json:{:id => id, operation_status:"error", error_message:"Cannot delete a customer that has contacts!"}  
+      render  json:{ operation_status:"error", error_message:"Cannot delete a customer that has contacts!"}  
     rescue
 
   end

@@ -4,11 +4,11 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
       t.string :name, default:""
       t.datetime :relationshipstart, null:false
       t.string :addresscity, default:""
-      t.string :addresspostalcode, default:""
+      t.string :addresspostalcode
       t.string :addressstreet, default:""
       t.string :addressapt, default: "" 
       t.integer :activitytype, default: 0
-      t.string :infoemail, default: ""  
+      t.string :infoemail
      
       t.references :user, null: false, foreign_key: true   
 

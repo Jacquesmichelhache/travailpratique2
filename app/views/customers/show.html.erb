@@ -14,104 +14,7 @@
 
 <script type="text/javascript"> 
   
-  let yesNoDialog = function(clientParams= {}){
-
-    let defaultParams = {
-      title:"Confirm operation",
-      affirmText:"Confirm",
-      denyText:"cancel"
-    }
-
-    let params = {...defaultParams,...clientParams};
-
-    return new Promise((resolve,reject)=>{
-      let overlay = document.createElement("div");
-      let title = document.createElement("h2");
-      let dialogContainer = document.createElement("div");
-      let footer = document.createElement("div");
-      let yesButton = document.createElement("button");
-      let noButton = document.createElement("button");
-
-      //styling
-      title.textContent = params.title;
-
-      footer.className = "d-flex flex-row justify-content-between align-content-center"
-      footer.style.width = "85%"
-      footer.style.marginTop = "20px";
-      overlay.className = "overlay d-flex flex-column align-items-center"
-      overlay.style.display = "none";
-      
-      dialogContainer.className = "yesNo-dialog-container d-flex flex-column align-items-center"
-      dialogContainer.style.padding = "20px";
-
-      yesButton.className = "btn btn-md btn-dark yesNo-btn-lg"
-      yesButton.textContent = params.affirmText;
-
-      noButton.className = "btn btn-md btn-dark yesNo-btn-lg"
-      noButton.textContent = params.denyText;
-
-      //events
-      yesButton.addEventListener("click",()=>{
-        $(overlay).remove();
-        resolve("yes")    
-      });
-      noButton.addEventListener("click",()=>{
-        $(overlay).remove();
-        resolve("no")        
-      });
-
-      footer.appendChild(yesButton)
-      footer.appendChild(noButton)
-
-      dialogContainer.appendChild(title)
-      dialogContainer.appendChild(footer)
-
-      overlay.appendChild(dialogContainer)
-
-      document.body.appendChild(overlay)
-      $(overlay).fadeIn(250);
-    });
-  }
-
-
-  let deleteCustomer = async function (customerId = null) {
-    let url= "<%= customers_delete_url %>"
-
-    let x = document.getElementsByName("csrf-token")[0];
-    let XSRF = x.content;
-
-    fetch(url,{
-      method:"DELETE",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      remote:"true",
-      headers:{
-        "X-CSRF-Token": XSRF,
-        "content-type":"application/json",
-        "Accept":"application/json"
-      },
-      body:JSON.stringify({id:customerId})
-    })
-    .then(response=>{
-      if(response.status !== 200) throw new Error(response.status)
-      else return response.json()
-    })
-    .then(data=>{
-      if(data.operation_status === "success") location.reload()
-      else{       
-        showSnackBar(data.operation_status + ": " + data.error_message)
-      }
-      
-    }).catch(function(e){
-      if(e.Error == 401){
-        window.location.href = '<%= root_url%>'
-      }
-    })
-
-  }
-
-
+ 
 
   ControlsCellRenderer = function(params){
     let wrap = document.createElement("div");
@@ -138,11 +41,12 @@
       let result = await yesNoDialog();
       if(result === "yes"){
         //delete item                
-        let operationStatus = await deleteCustomer(params.data.id)
-        if(operationStatus === "success"){
-          // page will refresh
+        let response = await deleteCustomer(params.data.id,"<%= customers_delete_url %>",'<%= root_url%>')
+        if(response.operation_status === "success"){
+          
+          location.reload()
         }else{
-          //show error message to user
+          showSnackBar(response.operation_status + ": "+response.error_message)
         }
       }      
     });

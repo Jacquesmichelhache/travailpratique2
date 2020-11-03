@@ -14,8 +14,8 @@ global.agGrid = require('ag-grid-community')
 import "bootstrap"
 
 require("../custom/snackbar")
-
-
+require("../custom/yesNoDialog")
+require("../custom/customers/delete_customer")
 
 global.jQuery, global.$ = require("jquery");
 

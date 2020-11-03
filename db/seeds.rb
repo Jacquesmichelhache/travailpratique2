@@ -20,11 +20,11 @@ user = User.first
   user.customers.create!(name: "Bercomac-#{x+1}",
     relationshipstart: Time.zone.now,
     addresscity: "addresscity",
-    addresspostalcode: "addresspostalcode",
+    addresspostalcode: "E1A7S8",
     addressstreet: "addressstreet",
     addressapt: "addressapt",
     activitytype: Customer::activitytypes[:active],
-    infoemail: "infoemail")
+    infoemail: "jacques@dsda.com")
 
 end
 
@@ -43,11 +43,11 @@ customers.each{ |customer|
 user.customers.create!(name: "customer with no contacts",
   relationshipstart: Time.zone.now,
   addresscity: "addresscity",
-  addresspostalcode: "addresspostalcode",
+  addresspostalcode: "E1A7S8",
   addressstreet: "addressstreet",
   addressapt: "addressapt",
   activitytype: Customer::activitytypes[:active],
-  infoemail: "infoemail")
+  infoemail: "jacques@dsda.com")
 
 
 
