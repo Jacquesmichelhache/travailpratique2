@@ -15,12 +15,15 @@
    <%= render 'customers/new_customer' %>
 </div>
 
-<script type="text/javascript"> 
-  
+<script type="text/javascript">   
 
   $("#newCustomerBtn").on("click",()=>{
      $("#newCustomerContainer").fadeIn()
   });
+
+   $(".overlay").on("click",(e)=>{
+    $("#newCustomerContainer").fadeOut()
+  })
 
  
 

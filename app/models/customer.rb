@@ -3,7 +3,9 @@ class Customer < ApplicationRecord
   belongs_to :user
   has_many :contacts, dependent: :restrict_with_exception 
 
-  enum activitytype: { active: 0, archived: 1 }
+  @@activitytypes = { Technologie: 1, Alimentaire: 2, Industriel: 3, Divertissement: 4, Autre: 5 }
+
+  enum activitytype: @@activitytypes
 
 
   #validations
@@ -20,6 +22,9 @@ class Customer < ApplicationRecord
   validates  :activitytype, presence: true
   validates :addressapt, length:{maximum:12}
 
+  def activitytypes_for_select
+    @@activitytypes.to_a 
+  end
 
   #methods
   def self.get_customer_data

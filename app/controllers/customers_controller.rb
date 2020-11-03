@@ -5,6 +5,9 @@ class CustomersController < ApplicationController
   def show   
     @customers =  current_user.customers
     @customer_data = @customers.collect{|x| x.attributes}.to_json
+
+    @new_customer = current_user.customers.build
+    @new_customer.name = "haha"
   end
 
   #DELETE

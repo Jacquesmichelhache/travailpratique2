@@ -3,34 +3,44 @@
     <div class="col-sm-12 col-md-6 offset-md-3">
       <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn">
 
-        <%= form_with(model: current_user.customers.build, local:true, namespace:"new_customer") do |f| %>
+        <%= form_with(model: @new_customer, local:true) do |n| %>
           <div name="header" class="login_title">  
             Create a new customer
           </div>
 
           <div name="login-body"  class="login_body">      
 
-            <%= f.label :name %>
-            <%= f.text_field :name, class: 'form-control' %>
+            <%= n.label :name %>
+            <%= n.text_field :name, class: 'form-control' %>
 
-            <%= f.label :startDate %>
-            <%= f.text_field :startDate, class: 'form-control' %>
+            <%= n.label :startDate %>
+            <%= n.text_field :startDate, html: { autocomplete: "disabled" }, class: 'form-control' %>
 
-            <%= f.label :activityType %>
-            <%= f.email_field :name, class: 'form-control' %>
+            <%= n.label :activityType %>            
+            <%= n.select :activitytype,  Customer.activitytypes.to_a, class: 'form-control' %>
 
-            <%= f.label :addresscity %>
-            <%= f.text_field :addresscity, class: 'form-control' %>
+          
 
-            <%= f.label :addresspostalcode %>
-            <%= f.text_field :addresspostalcode, class: 'form-control' %> 
+            <%= n.label :addresscity %>
+            <%= n.text_field :addresscity, class: 'form-control' %>
 
+            <%= n.label :addresspostalcode %>
+            <%= n.text_field :addresspostalcode, class: 'form-control' %> 
+
+            <%= n.label :addressstreet %>
+            <%= n.text_field :addressstreet, class: 'form-control' %> 
+
+            <%= n.label :addressapt %>
+            <%= n.text_field :addressapt, class: 'form-control' %> 
+
+            <%= n.label :infoemail %>
+            <%= n.text_field :infoemail, class: 'form-control' %> 
 
 
           </div>  
 
           <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
-            <%= f.submit "Create", class: "btn btn-primary" %>              
+            <%= n.submit "Create", class: "btn btn-primary" %>              
           </div>          
         <% end %>  
 
@@ -40,9 +50,14 @@
 </div>
 
 <script type="text/javascript"> 
-  $("#new_customer_customer_startDate").datepicker();
+  $("#customer_startDate").datepicker({
+    locale: "en",
+    sideBySIde: true
+  });
 
-
+ $(".overlay-ctn").on("click",(e)=>{
+    e.stopPropagation();
+  })
 
 </script>
 
