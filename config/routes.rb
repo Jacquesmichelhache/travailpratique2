@@ -11,13 +11,13 @@ Rails.application.routes.draw do
   
   devise_for :users, controllers:{sessions:'users/sessions',
           registrations:'users/registrations',
-          passwords:'users/passwords'}   
-  
+          passwords:'users/passwords'}    
 
 
  
   get '/logout', to: 'static_pages#logout'  
   get '/password_reset', to: 'static_pages#password_reset'
   get '/customers', to: 'customers#show'
-
+  delete '/customers/delete', to: 'customers#destroy'
+  
 end

@@ -4,48 +4,209 @@
       Customer list
 </div>
 
-<div id="customer_grid" class="ag-theme-alpine" style="width:100%"></div>
+<div class="d-flex flex-row align-items-center customer-filter-ctn"> 
+  <input id="customer_filter" type="text" placeholder="filter.." class="form-control" > 
+</div>
+
+<div id="customer_grid" class="ag-theme-alpine" style="width:auto;border:none"></div>
 
 
 
 <script type="text/javascript"> 
+  
+  let yesNoDialog = function(clientParams= {}){
 
+    let defaultParams = {
+      title:"Confirm operation",
+      affirmText:"Confirm",
+      denyText:"cancel"
+    }
 
-  function listControls () {}
+    let params = {...defaultParams,...clientParams};
 
-  listControls.prototype.init = function(params){
+    return new Promise((resolve,reject)=>{
+      let overlay = document.createElement("div");
+      let title = document.createElement("h2");
+      let dialogContainer = document.createElement("div");
+      let footer = document.createElement("div");
+      let yesButton = document.createElement("button");
+      let noButton = document.createElement("button");
 
-    this.deletButton = document.createElement("button");
-    this.deletButton.className = "btn btn-sm";
-    this.deletButton.textContent = "delete";
+      //styling
+      title.textContent = params.title;
+
+      footer.className = "d-flex flex-row justify-content-between align-content-center"
+      footer.style.width = "85%"
+      footer.style.marginTop = "20px";
+      overlay.className = "overlay d-flex flex-column align-items-center"
+      overlay.style.display = "none";
+      
+      dialogContainer.className = "yesNo-dialog-container d-flex flex-column align-items-center"
+      dialogContainer.style.padding = "20px";
+
+      yesButton.className = "btn btn-md btn-dark yesNo-btn-lg"
+      yesButton.textContent = params.affirmText;
+
+      noButton.className = "btn btn-md btn-dark yesNo-btn-lg"
+      noButton.textContent = params.denyText;
+
+      //events
+      yesButton.addEventListener("click",()=>{
+        $(overlay).remove();
+        resolve("yes")    
+      });
+      noButton.addEventListener("click",()=>{
+        $(overlay).remove();
+        resolve("no")        
+      });
+
+      footer.appendChild(yesButton)
+      footer.appendChild(noButton)
+
+      dialogContainer.appendChild(title)
+      dialogContainer.appendChild(footer)
+
+      overlay.appendChild(dialogContainer)
+
+      document.body.appendChild(overlay)
+      $(overlay).fadeIn(250);
+    });
   }
-  listControls.prototype.getGui = function(){
-    return this.deleteButton;
+
+
+  let deleteCustomer = async function (customerId = null) {
+    let url= "<%= customers_delete_url %>"
+
+    let x = document.getElementsByName("csrf-token")[0];
+    let XSRF = x.content;
+
+    fetch(url,{
+      method:"DELETE",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+
+      headers:{
+        "X-CSRF-Token": XSRF,
+        "content-type":"application/json",
+        "Accept":"application/json"
+      },
+      body:JSON.stringify({id:customerId})
+    })
+    .then((response=>response.json()))
+    .then(data=>{
+      console.log(data);
+    })
   }
 
-  DeleteCellRenderer = function(params){
-    let deletButton = document.createElement("button");
-    deletButton.className = "btn btn-sm";
-    deletButton.textContent = "delete"; 
-    return deletButton;
+
+
+  ControlsCellRenderer = function(params){
+    let wrap = document.createElement("div");
+    let deleteButton = document.createElement("button");
+    let editButton = document.createElement("button");
+    
+    //styling
+    wrap.className = "d-flex flex-row align-items-center justify-content-center";
+    wrap.style.width = "100%";
+    wrap.style.height = "100%";
+    wrap.style.padding = "5px";
+
+    deleteButton.className = "btn btn-sm btn-dark"
+    editButton.className = "btn btn-sm btn-dark"
+
+    editButton.style.margin = "3px";
+    deleteButton.style.margin = "3px";
+    
+    deleteButton.textContent = "delete"
+    editButton.textContent = "edit"
+
+    //events
+    deleteButton.addEventListener("click",async (e)=>{
+      let result = await yesNoDialog();
+      if(result === "yes"){
+        //delete item                
+        let operationStatus = await deleteCustomer(params.data.id)
+        if(operationStatus === "success"){
+          // page will refresh
+        }else{
+          //show error message to user
+        }
+      }      
+    });
+    editButton.addEventListener("click",(e)=>{
+
+    });
+
+
+    //append
+    wrap.appendChild(deleteButton)
+    wrap.appendChild(editButton)
+    
+    return wrap;
   }
 
-  let columnDefs = JSON.parse('<%= raw(@coldef_arr.to_json) %>');
-  columnDefs.push({"headerName":"Delete", width:100,cellRenderer:"DeleteCellRenderer"})
+
+  function dateFormatter(params){
+    let dateAsString = params.data.relationshipstart
+    let dateAsObject = new Date(dateAsString);
+    return dateAsObject.getDate() + "/" + dateAsObject.getMonth() + "/" + dateAsObject.getFullYear();
+  }
+
+
+  let defaultColDef = {
+    cellStyle: {"line-height":"60px","font-size":"16px"},
+    filter: true,
+    sortable:true ,
+    resizable : true
+  }
+
+  function dateComparator(date1, date2) {
+    let dateObject1 = new Date(date1);
+    let dateObject2 = new Date(date2);   
+
+    return dateObject1.getTime() - dateObject2.getTime();
+  }
+
+  let columnDefs = [
+    {headerName : "Name", field : "name"   },
+    {headerName : "Start Date", field : "relationshipstart", valueFormatter:dateFormatter,comparator:dateComparator},
+    {headerName : "Activity Type", field : "activitytype"},
+    {headerName : "Email Info", field : "infoemail"},
+    {headerName:"", width:120, cellRenderer:"ControlsCellRenderer", pinned: "left",resizable:false,filter:false,sortable:false,flex:2}]
+
 
   let gridOptions = {
+    defaultColDef:defaultColDef,
     columnDefs: columnDefs,
     rowData: JSON.parse('<%= raw(@customer_data) %>'),
     domLayout:"autoHeight",
     components:{
-      DeleteCellRenderer:DeleteCellRenderer
-    }
+      ControlsCellRenderer:ControlsCellRenderer
+    },
+    onGridReady:function(event){
+      let ids = columnDefs.map((col)=>col.field)
+      event.columnApi.autoSizeColumns(ids);
+    },
+    suppressCellSelection: true,
+    rowHeight : 60
   };
 
 
   document.addEventListener('DOMContentLoaded', function(){
     let gridDiv = document.querySelector('#customer_grid');
-    new agGrid.Grid(gridDiv, gridOptions);
+    let table = new agGrid.Grid(gridDiv, gridOptions);
+
+
+    $("#customer_filter").on("input",(e)=>{
+      table.gridOptions.api.setQuickFilter(e.target.value)
+    })
+
+
   });
+
+
+
+
 
 </script>

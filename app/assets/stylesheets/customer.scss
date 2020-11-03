@@ -2,3 +2,27 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+
+
+.customer-filter-ctn {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width:200px;
+}
+
+
+
+#customer_grid > div {
+  border:none
+}
+
+.yesNo-dialog-container{
+  width:350px;
+  height:auto;
+  border:5px solid black;
+  background-color: white;  
+}
+
+.yesNo-btn-lg {
+  width:100px;
+}

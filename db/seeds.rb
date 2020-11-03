@@ -29,3 +29,12 @@ User.create!(email: "jacques_m16@hotmail.com",
   addressapt: "addressapt",
   activitytype: Customer::activitytypes[:active],
   infoemail: "infoemail")
+
+  Customer.create!(name: "Precicom",
+    relationshipstart: Time.zone.now,
+    addresscity: "addresscity",
+    addresspostalcode: "addresspostalcode",
+    addressstreet: "addressstreet",
+    addressapt: "addressapt",
+    activitytype: Customer::activitytypes[:active],
+    infoemail: "infoemail")
