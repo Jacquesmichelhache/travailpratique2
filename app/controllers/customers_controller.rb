@@ -27,6 +27,8 @@ class CustomersController < ApplicationController
       render  json:{ operation_status:"error", error_message:"Cannot delete a customer that has contacts!"}  
     rescue
 
+    end
+
   end
 
   #POST
@@ -35,12 +37,7 @@ class CustomersController < ApplicationController
 
     # render  json:{operation_status:"success", error_message:"customer successfully removed"} 
     respond_to do |format|
-
-      format.json {render json:{operation_status:"success", 
-        error_message:"customer successfully removed",
-        status: :unprocessable_entity}   }        
+      format.json { render json:{status: :unprocessable_entity}}        
     end
-
   end
-
 end
