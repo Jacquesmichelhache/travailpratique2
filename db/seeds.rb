@@ -16,7 +16,31 @@ User.create!(
 
 user = User.first
 
-user.customers.create!(name: "bercomac",
+50.times do |x|  
+  user.customers.create!(name: "Bercomac-#{x+1}",
+    relationshipstart: Time.zone.now,
+    addresscity: "addresscity",
+    addresspostalcode: "addresspostalcode",
+    addressstreet: "addressstreet",
+    addressapt: "addressapt",
+    activitytype: Customer::activitytypes[:active],
+    infoemail: "infoemail")
+
+end
+
+customers = user.customers
+
+customers.each{ |customer|
+  5.times do 
+    customer.contacts.create!(name: "Hache",
+      firstname: "Jacques",
+      email: "jacques_m16@hotmail.com"
+    )
+  end
+}
+
+
+user.customers.create!(name: "customer with no contacts",
   relationshipstart: Time.zone.now,
   addresscity: "addresscity",
   addresspostalcode: "addresspostalcode",
@@ -25,20 +49,11 @@ user.customers.create!(name: "bercomac",
   activitytype: Customer::activitytypes[:active],
   infoemail: "infoemail")
 
-user.customers.create!(name: "Usinage STI",
-  relationshipstart: Time.zone.now,
-  addresscity: "addresscity",
-  addresspostalcode: "addresspostalcode",
-  addressstreet: "addressstreet",
-  addressapt: "addressapt",
-  activitytype: Customer::activitytypes[:active],
-  infoemail: "infoemail")
 
-user.customers.create!(name: "Precicom",
-  relationshipstart: Time.zone.now,
-  addresscity: "addresscity",
-  addresspostalcode: "addresspostalcode",
-  addressstreet: "addressstreet",
-  addressapt: "addressapt",
-  activitytype: Customer::activitytypes[:active],
-  infoemail: "infoemail")
+
+
+
+
+
+
+

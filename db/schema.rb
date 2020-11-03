@@ -18,10 +18,10 @@ ActiveRecord::Schema.define(version: 2020_11_03_135500) do
     t.string "email", default: ""
     t.string "tel", default: ""
     t.string "ext", default: ""
-    t.integer "user_id", null: false
+    t.integer "customer_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_contacts_on_user_id"
+    t.index ["customer_id"], name: "index_contacts_on_customer_id"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -51,6 +51,6 @@ ActiveRecord::Schema.define(version: 2020_11_03_135500) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "contacts", "users"
+  add_foreign_key "contacts", "customers"
   add_foreign_key "customers", "users"
 end

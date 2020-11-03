@@ -10,17 +10,23 @@ class CustomersController < ApplicationController
   #DELETE
   def destroy
     
-    id = params[:id]        
-    current_user.customers.find(id).destroy  
-    render  json:{:id => id, operation_status:"success", error_message:"customer successfully removed"}    
+    id = params[:id]   
+    
+    begin
+      current_user.customers.find(id).destroy        
+      render  json:{:id => id, operation_status:"success", error_message:"customer successfully removed"}    
 
-  rescue ActiveRecord::RecordNotFound
-    render  json:{:id => id, operation_status:"error", error_message:"customer not found in database"}
-  rescue ActiveREcord::DeleteRestrictionError 
-    render  json:{:id => id, operation_status:"error", error_message:"Cannot remove a customer with contacts"}
-  rescue ActiveRecord::RecordNotDestroyed
-    render  json:{:id => id, operation_status:"error", error_message:"customer could not be destroyed. Contact administrator"}
+    rescue ActiveRecord::RecordNotFound
+      render  json:{:id => id, operation_status:"error", error_message:"customer not found in database"}
+    rescue ActiveRecord::DeleteRestrictionError 
+      render  json:{:id => id, operation_status:"error", error_message:"Cannot remove a customer with contacts"}
+    rescue ActiveRecord::RecordNotDestroyed
+      render  json:{:id => id, operation_status:"error", error_message:"Cannot delete a customer that has contacts!"}  
+    rescue
+
   end
+
+end
  
 
 end

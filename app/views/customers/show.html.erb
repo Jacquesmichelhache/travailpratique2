@@ -85,7 +85,7 @@
       mode: "cors",
       cache: "no-cache",
       credentials: "same-origin",
-
+      remote:"true",
       headers:{
         "X-CSRF-Token": XSRF,
         "content-type":"application/json",
@@ -94,14 +94,17 @@
       body:JSON.stringify({id:customerId})
     })
     .then(response=>{
-      if(response.status !== 200){
-        throw new Error(response.status)
-      }else return response.json()
+      if(response.status !== 200) throw new Error(response.status)
+      else return response.json()
     })
     .then(data=>{
-      console.log(data);
-    }).catch(function(error){
-      if(error == 401){
+      if(data.operation_status === "success") location.reload()
+      else{       
+        showSnackBar(data.operation_status + ": " + data.error_message)
+      }
+      
+    }).catch(function(e){
+      if(e.Error == 401){
         window.location.href = '<%= root_url%>'
       }
     })
