@@ -1,0 +1,42 @@
+<div class="overlay">
+  <div class="row no-gutters">
+    <div class="col-sm-12 col-md-6 offset-md-3">
+      <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn">
+
+        <%= form_with(model: current_user.customers.build, local:true) do |f| %>
+          <div name="header" class="login_title">  
+            Create a new customer
+          </div>
+
+          <div name="login-body"  class="login_body">      
+
+            <%= f.label :name %>
+            <%= f.text_field :name, class: 'form-control' %>
+
+            <%= f.label :startDate %>
+            <%= f.text_field :date_of_tour, data:{ provide:'datepicker' } %>
+
+            <%= f.label :activityType %>
+            <%= f.email_field :name, class: 'form-control' %>
+
+            <%= f.label :addresscity %>
+            <%= f.text_field :addresscity, class: 'form-control' %>
+
+            <%= f.label :addresspostalcode %>
+            <%= f.text_field :addresspostalcode, class: 'form-control' %> 
+
+
+
+          </div>  
+
+          <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
+            <%= f.submit "Create", class: "btn btn-primary" %>              
+          </div>          
+        <% end %>  
+
+      </div> 
+    </div>   
+  </div>   
+</div>
+
+
