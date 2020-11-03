@@ -3,7 +3,7 @@
     <div class="col-sm-12 col-md-6 offset-md-3">
       <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn">
 
-        <%= form_with(model: @new_customer, local:true) do |n| %>
+        <%= form_with(model: @new_customer) do |n| %>
           <div name="header" class="login_title">  
             Create a new customer
           </div>
@@ -17,7 +17,7 @@
             <%= n.text_field :startDate, html: { autocomplete: "disabled" }, class: 'form-control' %>
 
             <%= n.label :activityType %>            
-            <%= n.select :activitytype,  Customer.activitytypes.to_a, class: 'form-control' %>
+            <%= n.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
 
           
 
@@ -40,7 +40,7 @@
           </div>  
 
           <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
-            <%= n.submit "Create", class: "btn btn-primary" %>              
+            <%= n.submit "Create Customer", class: "btn btn-primary" %>              
           </div>          
         <% end %>  
 
@@ -58,6 +58,18 @@
  $(".overlay-ctn").on("click",(e)=>{
     e.stopPropagation();
   })
+
+  document.body.addEventListener('ajax:success', function(event) {
+    [data, status, xhr] = event.detail
+    alert("ajax:success")
+  })
+
+  document.body.addEventListener('ajax:error', function(event) {
+    alert("ajax:error")
+  })
+
+ 
+ 
 
 </script>
 

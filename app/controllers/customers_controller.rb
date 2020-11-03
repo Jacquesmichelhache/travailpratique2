@@ -1,7 +1,7 @@
 class CustomersController < ApplicationController  
   before_action :authenticate_user!
   
-  
+  #GET
   def show   
     @customers =  current_user.customers
     @customer_data = @customers.collect{|x| x.attributes}.to_json
@@ -29,7 +29,18 @@ class CustomersController < ApplicationController
 
   end
 
-end
- 
+  #POST
+  def create
+    # new_customer = params[:new_customer]
+
+    # render  json:{operation_status:"success", error_message:"customer successfully removed"} 
+    respond_to do |format|
+
+      format.json {render json:{operation_status:"success", 
+        error_message:"customer successfully removed",
+        status: :unprocessable_entity}   }        
+    end
+
+  end
 
 end

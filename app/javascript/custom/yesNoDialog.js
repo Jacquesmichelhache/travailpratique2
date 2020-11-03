@@ -27,6 +27,7 @@ window.yesNoDialog = function(clientParams= {}){
     
     dialogContainer.className = "yesNo-dialog-container d-flex flex-column align-items-center"
     dialogContainer.style.padding = "20px";
+    dialogContainer.style.marginTop = "30px";
 
     yesButton.className = "btn btn-md btn-dark yesNo-btn-lg"
     yesButton.textContent = params.affirmText;
@@ -36,14 +37,16 @@ window.yesNoDialog = function(clientParams= {}){
 
     //events
     yesButton.addEventListener("click",()=>{
-      $(overlay).remove();
+      $(overlay).remove(); //clean up
       resolve("yes")    
     });
     noButton.addEventListener("click",()=>{
-      $(overlay).remove();
+      $(overlay).remove(); //clean up
       resolve("no")        
     });
 
+
+    //appending
     footer.appendChild(yesButton)
     footer.appendChild(noButton)
 
@@ -53,6 +56,9 @@ window.yesNoDialog = function(clientParams= {}){
     overlay.appendChild(dialogContainer)
 
     document.body.appendChild(overlay)
+
+    //show
     $(overlay).fadeIn(250);
+    
   });
 }
