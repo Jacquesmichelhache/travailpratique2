@@ -7,7 +7,7 @@ class CreateContacts < ActiveRecord::Migration[6.0]
       t.string :tel, default:""
       t.string :ext, default:""
 
-      t.references :user, null: false, foreign_key: true    
+      t.references :customer, null: false, foreign_key: true    
     
 
       t.timestamps
