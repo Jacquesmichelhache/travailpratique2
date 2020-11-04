@@ -16,13 +16,16 @@ class CustomersController < ApplicationController
     
     begin
       @cust = current_user.customers.find(id)
-
+    
       render  json: {operation_status:"success", 
-        view: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals: {:@cust => @cust})}
+        customerView: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals: {:@cust => @cust}),
+        contactView: render_to_string(partial: 'contacts/page',:formats => [:html], layout: false, locals: {:@contacts => @cust.contacts}),
+        customerName: @cust.name
+      }
     
       #render  json:{operation_status:"success", value: cust.to_json}  
     rescue Exception => e
-      render  json:{operation_status:"fail", error_message: e.message}  
+      render  json:{operation_status:"error", error_message: e.message}  
     end
 
   end
@@ -34,10 +37,10 @@ class CustomersController < ApplicationController
     
     begin
       current_user.customers.find(id).destroy        
-      render  json:{operation_status:"success", error_message:"customer successfully removed"}    
+      render  json:{operation_status:"success", error_message:"Customer successfully removed"}    
 
     rescue ActiveRecord::RecordNotFound
-      render  json:{ operation_status:"error", error_message:"customer not found in database"}
+      render  json:{ operation_status:"error", error_message:"Customer not found in database"}
     rescue ActiveRecord::DeleteRestrictionError 
       #An assumption is made here that the customer has contacts
       render  json:{ operation_status:"error", error_message:"Cannot remove a customer with contacts"}

@@ -1,0 +1,91 @@
+<div class="d-flex flex-row align-items-end justify-content-between" style="margin-top:20px"> 
+  <input id="contacts_filter" type="text" placeholder="filter.." class="form-control customer-filter-input" > 
+  <button id="newContactBtn" class="btn btn-sm btn-dark">New Contact</button>
+</div>
+
+<div id="contact-container" class="ag-theme-alpine" style="width:auto;border:none;margin-top:20px">
+
+</div>
+
+
+
+
+<script type="text/javascript">  
+
+//self executing function to create private variable scope
+(function(){
+  let deleteButtonCallback = async (params)=>{
+    //params is an agGrid object
+     let result = await yesNoDialog();
+
+    if(result === "yes"){
+
+      //delete item with costumer_id and params.data.id (the contact id)               
+      let response = await deleteContact(costumer_id, params.data.id,"<%= contacts_delete_url %>",'<%= root_url%>')
+
+      if(response.operation_status === "success"){          
+       contacts_table.gridOptions.api.setRowData(JSON.parse(response.contacts))
+      }else{
+        showSnackBar(response.operation_status + ": "+response.error_message)
+      }
+    } 
+  }
+  let editButtonCallBack = (params) =>{
+    show_edit_panel(params.data.id);  
+  }
+
+let defaultColDef = {
+    cellStyle: {"line-height":"60px","font-size":"16px"},
+    filter: true,
+    sortable:true ,
+    resizable : true,    
+ }
+
+ let contact_column_definitions = [
+    {headerName : "Name", field : "name" },
+    {headerName : "First name", field : "firstname"},
+    {headerName : "Tel", field : "tel"},
+    {headerName : "Ext", field : "ext"},
+    {headerName : "Email", field : "email"},
+    {headerName:"", width:120, cellRenderer:"ControlsCellRenderer", pinned: "left",resizable:false,filter:false,sortable:false,flex:2}]
+
+let gridOptions = {
+    defaultColDef:defaultColDef,
+    columnDefs: contact_column_definitions,
+    rowData: JSON.parse('<%= raw(@contacts.collect{|x| x.attributes}.to_json) %>'),
+    domLayout:"autoHeight",
+    components:{
+      ControlsCellRenderer:window.controlsCellRenderer(deleteButtonCallback,editButtonCallBack)
+    },   
+    onRowDataChanged:function(){
+      //resize table columns
+      let ids = contact_column_definitions.map((col)=>col.field)
+      contacts_table.gridOptions.columnApi.autoSizeColumns(ids);
+    } ,
+    suppressCellSelection: true,
+    rowHeight : 60
+  };
+ 
+
+
+  let gridDiv = document.querySelector('#contact-container');
+  let contacts_table = new agGrid.Grid(gridDiv, gridOptions);
+
+  console.log("contacts reated")
+
+  $("#contacts_filter").on("input",(e)=>{
+    contacts_table.gridOptions.api.setQuickFilter(e.target.value)
+  })
+
+
+  //resize table columns
+  $("#contacts-tab").on("click",()=>{
+    setTimeout(()=>{
+          let ids = contact_column_definitions.map((col)=>col.field)
+          contacts_table.gridOptions.columnApi.autoSizeColumns(ids);
+        },200)
+  });
+
+})()
+
+</script>

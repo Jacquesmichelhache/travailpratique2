@@ -12,18 +12,32 @@ require("channels")
 //require("jquery-datetimepicker")
 global.agGrid = require('ag-grid-community')
 
-// import the bootstrap javascript module
-import "bootstrap"
+//import the bootstrap javascript module
+//import "bootstrap"
+
+require("popper.js")
+require("bootstrap")
 
 require("../custom/snackbar")
 require("../custom/yesNoDialog")
 require("../custom/overlay")
+require("../custom/edit_column_aggrid")
+
+//customers ajax
 require("../custom/customers/delete_customer")
 require("../custom/customers/get_customer_info")
 
-global.jQuery, global.$ = require("jquery");
+//contacts ajax
+require("../custom/contacts/delete_contact")
+require("../custom/contacts/create_contact")
+require("../custom/contacts/update_contact")
 
 
+let jQuery = require("jquery");
+
+// import jQuery from "jquery";
+global.$ = global.jQuery = jQuery;
+window.$ = window.jQuery = jQuery;
 
 require('webpack-jquery-ui');
 require('webpack-jquery-ui/css');

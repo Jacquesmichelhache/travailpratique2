@@ -34,7 +34,9 @@ customers.each{ |customer|
   5.times do 
     customer.contacts.create!(name: "Hache",
       firstname: "Jacques",
-      email: "jacques_m16@hotmail.com"
+      email: "jacques_m16@hotmail.com",
+      tel: "1-506-608-6195",
+      ext: "2248"
     )
   end
 }
