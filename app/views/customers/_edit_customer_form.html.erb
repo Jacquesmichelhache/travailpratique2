@@ -1,0 +1,104 @@
+ <div class="overlay">
+  <div class="row no-gutters">
+    <div class="col-sm-12 col-md-6 offset-md-3">
+      <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn">   
+
+        <div id="cust_edit_errors"></div>     
+
+        <%= form_with(model: @cust, url: customers_update_path , method: "post", html: {id: :edit_customer_form}, scope: "edit") do |n| %>
+          <div name="header" class="login_title">  
+            Edit a customer
+          </div>
+
+          <div name="login-body"  class="login_body">  
+
+            <%= hidden_field_tag :id, @cust.id %>    
+
+            <%= n.label :Name %>
+            <%= n.text_field :name, class: 'form-control' %>
+
+            <%= n.label :"Start date" %>
+            <%= n.text_field :relationshipstart,{ autocomplete: "disabled", readonly: "readonly",class: 'form-control',  value: @cust.relationshipstart.strftime("%d-%m-%Y") } %>
+
+            <%= n.label :"Activity type" %>            
+            <%= n.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
+          
+
+            <%= n.label :"City" %>
+            <%= n.text_field :addresscity, class: 'form-control' %>
+
+            <%= n.label :"Area code" %>
+            <%= n.text_field :addresspostalcode, class: 'form-control' %> 
+
+            <%= n.label :"Street" %>
+            <%= n.text_field :addressstreet, class: 'form-control' %> 
+
+            <%= n.label :"apt" %>
+            <%= n.text_field :addressapt, class: 'form-control' %> 
+
+            <%= n.label :"Email" %>
+            <%= n.text_field :infoemail, class: 'form-control' %> 
+
+
+          </div>  
+
+          <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
+            <%= n.submit "Save", {id: :edit_customer_btn, class: "btn btn-primary"} %>              
+          </div>          
+        <% end %>  
+      
+      </div> 
+    </div>   
+  </div>   
+</div>
+
+
+<script type="text/javascript">  
+
+  // function setEvents(){
+  //   $(".overlay").on("click",()=>$("#edit_customer_ctn").fadeOut())
+  //   $(".overlay-ctn").on("click",(e)=>e.stopPropagation())
+
+  //   //init datepicker
+  //   $("#edit_relationshipstart").datepicker({
+  //     locale: "en",
+  //     sideBySIde: true,
+  //     dateFormat: 'dd-M-yy'     
+  //   });
+  // }
+
+  $("#edit_customer_form").on('ajax:success', (event)=>{
+    [data, status, xhr] = event.detail   
+
+    if(data.status === "valid"){
+      
+      showSnackBar("Successfully saved changes")
+
+      //reloads the customer table by refreshing the page
+      $("#edit_customer_ctn").fadeOut(200,()=>{location.reload()})    
+    console.log(data.value)
+    }else{
+
+      showSnackBar("Error: unable to save changes")
+
+      if(typeof data.errors === "object"){
+
+
+        $("#cust_edit_errors").empty()
+
+        //show list of errors to client
+        Object.keys(data.errors).forEach(key => {
+            let errorLabel = document.createElement("div");
+            errorLabel.textContent = data.errors[key][0]
+            errorLabel.className = "invalid-information"
+            $("#cust_edit_errors").append(errorLabel)
+        });
+      } 
+    }  
+
+    //setEvents()
+  })
+
+
+  //setEvents()
+</script>

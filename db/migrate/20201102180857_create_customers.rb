@@ -7,7 +7,7 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
       t.string :addresspostalcode
       t.string :addressstreet, default:""
       t.string :addressapt, default: "" 
-      t.integer :activitytype, default: 0
+      t.string :activitytype
       t.string :infoemail
      
       t.references :user, null: false, foreign_key: true   

@@ -13,14 +13,13 @@ class Customer < ApplicationRecord
  
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i  
-  validates :infoemail, presence: true, length:{maximum:255},
+  validates :infoemail, presence: {message: "Email cannot be blank"}, length:{maximum:255},
       format: { with: VALID_EMAIL_REGEX , message: "Email format is invalid" }
 
   VALID_AREACODE_REGEX = /\A[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1}[ -]?\d{1}[A-Z]{1}\d{1}\z/i  
   validates :addresspostalcode, 
       format: { with: VALID_AREACODE_REGEX, message: "postal code is invalid" }
-
-      validates  :relationshipstart, presence: {message: "A name must be defined"}
+ 
   validates  :relationshipstart, presence: {message: "A start date must be chosen"}
   validates  :activitytype, presence: {message: "An activity type must be chosen"}
   validates :addressapt, length:{maximum:12, message: "Apt value has more then 12 characters"} 

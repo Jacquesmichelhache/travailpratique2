@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_135500) do
     t.string "addresspostalcode"
     t.string "addressstreet", default: ""
     t.string "addressapt", default: ""
-    t.integer "activitytype", default: 0
+    t.string "activitytype"
     t.string "infoemail"
     t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false

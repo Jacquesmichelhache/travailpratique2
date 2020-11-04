@@ -1,4 +1,3 @@
-<% provide(:title, "contacts") %>
 
 <div name="header" class="login_title">  
       Customer list
@@ -12,20 +11,51 @@
 <div id="customer_grid" class="ag-theme-alpine" style="width:auto;border:none;margin-top:20px"></div>
 
 <div id="newCustomerContainer" style="display:none">
-   <%= render 'customers/new_customer' %>
+  <%= render 'customers/new_customer_form' %>
 </div>
 
-<script type="text/javascript">   
+<div id="edit_customer_ctn" style="display:none">
+  
+</div>
 
-  $("#newCustomerBtn").on("click",()=>{
-     $("#newCustomerContainer").fadeIn()
-  });
 
-   $(".overlay").on("click",(e)=>{
+
+
+<script type="text/javascript">  
+
+  $(".overlay").on("click",(e)=>{
     $("#newCustomerContainer").fadeOut()
   })
 
- 
+  $("#newCustomerBtn").on("click",()=>{
+     $("#newCustomerContainer").fadeIn()
+  }); 
+
+  function setEvents(){
+    console.log("wtf")
+
+    $(".overlay").on("click",()=>$("#edit_customer_ctn").fadeOut())
+    $(".overlay-ctn").on("click",(e)=>e.stopPropagation())
+
+    //init datepicker
+    $("#edit_relationshipstart").datepicker({
+      locale: "en",
+      sideBySIde: true,
+      dateFormat: 'dd-m-yy'     
+    });    
+  }
+
+  async function show_edit_panel(customer_id = null){  
+    let customer_info = await getCustomer(customer_id,"<%= customers_edit_url %>","<%= root_url%>")
+
+    $("#edit_customer_ctn").empty()
+    $("#edit_customer_ctn").append(customer_info.view)
+    $("#edit_customer_ctn").fadeIn()     
+
+    setTimeout(()=>setEvents(),200);
+       
+  }
+  
 
   ControlsCellRenderer = function(params){
     let wrap = document.createElement("div");
@@ -50,19 +80,22 @@
     //events
     deleteButton.addEventListener("click",async (e)=>{
       let result = await yesNoDialog();
+
       if(result === "yes"){
+
         //delete item                
         let response = await deleteCustomer(params.data.id,"<%= customers_delete_url %>",'<%= root_url%>')
-        if(response.operation_status === "success"){
-          
+
+        if(response.operation_status === "success"){          
           location.reload()
         }else{
           showSnackBar(response.operation_status + ": "+response.error_message)
         }
       }      
     });
-    editButton.addEventListener("click",(e)=>{
 
+    editButton.addEventListener("click",(e)=>{
+      show_edit_panel(params.data.id);    
     });
 
 
@@ -75,9 +108,9 @@
 
 
   function dateFormatter(params){
-    let dateAsString = params.data.relationshipstart
-    let dateAsObject = new Date(dateAsString);
-    return dateAsObject.getDate() + "/" + dateAsObject.getMonth() + "/" + dateAsObject.getFullYear();
+    let dateAsString = params.data.relationshipstart   
+    let dateAsObject = new Date(Date.parse(dateAsString));    
+    return dateAsObject.getUTCDate() + "/" + dateAsObject.getUTCMonth() + "/" + dateAsObject.getUTCFullYear();
   }
 
 

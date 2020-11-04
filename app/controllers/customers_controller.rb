@@ -10,6 +10,23 @@ class CustomersController < ApplicationController
   
   end
 
+  #POST
+  def edit
+    id = params[:id]  
+    
+    begin
+      @cust = current_user.customers.find(id)
+
+      render  json: {operation_status:"success", 
+        view: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals: {:@cust => @cust})}
+    
+      #render  json:{operation_status:"success", value: cust.to_json}  
+    rescue Exception => e
+      render  json:{operation_status:"fail", error_message: e.message}  
+    end
+
+  end
+
   #DELETE
   def destroy
     
@@ -22,6 +39,7 @@ class CustomersController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       render  json:{ operation_status:"error", error_message:"customer not found in database"}
     rescue ActiveRecord::DeleteRestrictionError 
+      #An assumption is made here that the customer has contacts
       render  json:{ operation_status:"error", error_message:"Cannot remove a customer with contacts"}
     rescue ActiveRecord::RecordNotDestroyed
       render  json:{ operation_status:"error", error_message:"Cannot delete a customer that has contacts!"}  
@@ -32,27 +50,56 @@ class CustomersController < ApplicationController
   end
 
   #POST
-  def create
+  def update
 
-    p = customer_params
-    
+    #get filtered parameters
+    p = edit_customer_params
+
+   
+    if current_user != nil then
+      customer = current_user.customers.find(params[:id]);
+
+      if customer != nil then
+        if customer.update(p) then
+          respond_to do |format|
+            format.json { render json:{status: :valid, value: customer.to_json}}        
+          end
+        else
+          respond_to do |format|
+            format.json { render json:{status: :invalid, errors: customer.errors}}        
+          end
+        end
+      else
+
+      end      
+    else
+      render  json:{ operation_status:"error", error_message:"Fatal internal error: current_user is nil"}  
+    end
+
+  end
+
+  #POST
+  def create
+    p = create_customer_params
+
+    #validate the model before commiting the changes
 
     begin
       p[:relationshipstart] = DateTime.strptime(p[:relationshipstart], "%m/%d/%Y")  
     rescue
     ensure
       new_customer = current_user.customers.build(p)
-    end
-   
+    end  
    
 
     if new_customer.valid? then
-      new_customer.save
 
+      new_customer.save
       respond_to do |format|
         format.json { render json:{status: :valid}}        
       end
     else
+      
       respond_to do |format|
         format.json { render json:{status: :invalid, errors: new_customer.errors}}        
       end
@@ -63,8 +110,14 @@ class CustomersController < ApplicationController
 
 
   private
-    def customer_params
-      params.require(:customer).permit(:name, :relationshipstart, :addresscity,
+    def create_customer_params
+      params.require(:create).permit(:name, :relationshipstart, :addresscity,
+        :addresspostalcode, :addressstreet, :addressapt, :activitytype,
+      :infoemail)
+    end
+
+    def edit_customer_params
+      params.require(:edit).permit(:name, :relationshipstart, :addresscity,
         :addresspostalcode, :addressstreet, :addressapt, :activitytype,
       :infoemail)
     end

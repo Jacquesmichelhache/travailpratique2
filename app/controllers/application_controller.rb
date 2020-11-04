@@ -20,6 +20,11 @@ class ApplicationController < ActionController::Base
     #redirect_to root_url
   end
 
+  def customers_path
+
+  end
+ 
+
   private
     # Confirms a logged-in user.
     def logged_in_user

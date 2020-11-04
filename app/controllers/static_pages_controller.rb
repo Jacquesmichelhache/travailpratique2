@@ -17,9 +17,9 @@ class StaticPagesController < ApplicationController
    
    
 
-    if user_signed_in?     
+    if user_signed_in?           
       #redirect to user customer list
-      redirect_to customers_path
+      redirect_to customers_url #Note: for some reason customers_path evaluates to nil
     else      
       flash.discard
      

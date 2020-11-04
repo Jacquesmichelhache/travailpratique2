@@ -51,7 +51,7 @@
 
     if(panel instanceof HTMLElement){
       $(panel).fadeIn();
-      container.style.height = parseInt(window.getComputedStyle(panel).height ) + 60 + "px"
+      container.style.height = parseInt(window.getComputedStyle(panel).height ) + 80 + "px"
     } else $("#logincontainer").fadeIn();       
 
     if(sessionStorage) sessionStorage.setItem("greetingStatus",panelId)

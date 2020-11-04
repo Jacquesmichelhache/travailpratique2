@@ -19,9 +19,10 @@ require("../custom/snackbar")
 require("../custom/yesNoDialog")
 require("../custom/overlay")
 require("../custom/customers/delete_customer")
-
+require("../custom/customers/get_customer_info")
 
 global.jQuery, global.$ = require("jquery");
+
 
 
 require('webpack-jquery-ui');
