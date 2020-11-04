@@ -2,47 +2,48 @@
   <div class="row no-gutters">
     <div class="col-sm-12 col-md-6 offset-md-3">
       <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn">
+     
+        <div id="cust_creation_errors"></div>     
 
-        <%= form_with(model: @new_customer) do |n| %>
+        <%= form_with(model: @new_customer, html: {id: :create_customer_form}) do |n| %>
           <div name="header" class="login_title">  
             Create a new customer
           </div>
 
           <div name="login-body"  class="login_body">      
 
-            <%= n.label :name %>
+            <%= n.label :Name %>
             <%= n.text_field :name, class: 'form-control' %>
 
-            <%= n.label :startDate %>
-            <%= n.text_field :startDate, html: { autocomplete: "disabled" }, class: 'form-control' %>
+            <%= n.label :"Start date" %>
+            <%= n.text_field :relationshipstart, { autocomplete: "disabled", readonly: "readonly",class: 'form-control' } %>
 
-            <%= n.label :activityType %>            
+            <%= n.label :"Activity type" %>            
             <%= n.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
-
           
 
-            <%= n.label :addresscity %>
+            <%= n.label :"City" %>
             <%= n.text_field :addresscity, class: 'form-control' %>
 
-            <%= n.label :addresspostalcode %>
+            <%= n.label :"Area code" %>
             <%= n.text_field :addresspostalcode, class: 'form-control' %> 
 
-            <%= n.label :addressstreet %>
+            <%= n.label :"Street" %>
             <%= n.text_field :addressstreet, class: 'form-control' %> 
 
-            <%= n.label :addressapt %>
+            <%= n.label :"apt" %>
             <%= n.text_field :addressapt, class: 'form-control' %> 
 
-            <%= n.label :infoemail %>
+            <%= n.label :"Email" %>
             <%= n.text_field :infoemail, class: 'form-control' %> 
 
 
           </div>  
 
           <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
-            <%= n.submit "Create Customer", class: "btn btn-primary" %>              
+            <%= n.submit "Create Customer", {id: :create_customer_btn, class: "btn btn-primary"} %>              
           </div>          
-        <% end %>  
+        <% end %>           
 
       </div> 
     </div>   
@@ -50,25 +51,53 @@
 </div>
 
 <script type="text/javascript"> 
-  $("#customer_startDate").datepicker({
+  $("#customer_relationshipstart").datepicker({
     locale: "en",
-    sideBySIde: true
+    sideBySIde: true,
+    dateFormat: 'dd-M-yy'     
   });
 
  $(".overlay-ctn").on("click",(e)=>{
     e.stopPropagation();
   })
 
+  $("#create_customer_form").submit(()=>{
+    $("#create_customer_btn").attr("disabled",true);
+     $("#cust_creation_errors").empty();
+    return true;
+  });
+
   document.body.addEventListener('ajax:success', function(event) {
     [data, status, xhr] = event.detail
-    alert("ajax:success")
+
+    
+
+    if(data.status === "valid"){
+      
+      showSnackBar("Successfully created a customer")
+      $("#newCustomerContainer").fadeOut(200,()=>{location.reload()})     
+
+    }else{
+      showSnackBar("Error: unable to create customer")
+    
+     
+
+      if(typeof data.errors === "object"){
+
+        Object.keys(data.errors).forEach(key => {
+            let errorLabel = document.createElement("div");
+            errorLabel.textContent = data.errors[key][0]
+            errorLabel.className = "invalid-information"
+            $("#cust_creation_errors").append(errorLabel)
+        });
+      } 
+    }
   })
 
   document.body.addEventListener('ajax:error', function(event) {
-    alert("ajax:error")
-  })
-
- 
+      showSnackBar("Error: problem communicating with server")
+   
+  }) 
  
 
 </script>

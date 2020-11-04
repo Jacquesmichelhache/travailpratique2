@@ -16,14 +16,14 @@ User.create!(
 
 user = User.first
 
-50.times do |x|  
+5.times do |x|  
   user.customers.create!(name: "Bercomac-#{x+1}",
     relationshipstart: Time.zone.now,
     addresscity: "addresscity",
     addresspostalcode: "E1A7S8",
     addressstreet: "addressstreet",
     addressapt: "addressapt",
-    activitytype: Customer::activitytypes[:active],
+    activitytype: Customer::activitytypes[:technology],
     infoemail: "jacques@dsda.com")
 
 end
@@ -46,7 +46,7 @@ user.customers.create!(name: "customer with no contacts",
   addresspostalcode: "E1A7S8",
   addressstreet: "addressstreet",
   addressapt: "addressapt",
-  activitytype: Customer::activitytypes[:active],
+  activitytype: Customer::activitytypes[:technology],
   infoemail: "jacques@dsda.com")
 
 

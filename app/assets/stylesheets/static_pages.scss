@@ -18,11 +18,20 @@
   overflow-y: auto;
 }
 
+.invalid-information {
+  color: red;
+  margin: 0px;
+  padding: 0px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .overlay-ctn {
   background-color: white;
   padding: 20px;
   margin-top: 20px;
   border-radius: 10px;
+  position: relative;
 }
 
 .login_row_col{
