@@ -1,11 +1,10 @@
-window.deleteCustomer = async function (customerId = null,url = "",redirect_url = "") {
-  
+export async function get_new_customer_form(url = "",redirect_url = "") {  
 
   let x = document.getElementsByName("csrf-token")[0];
   let XSRF = x.content;
 
   return fetch(url,{
-    method:"DELETE",
+    method:"POST",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
@@ -14,8 +13,7 @@ window.deleteCustomer = async function (customerId = null,url = "",redirect_url 
       "X-CSRF-Token": XSRF,
       "content-type":"application/json",
       "Accept":"application/json"
-    },
-    body:JSON.stringify({id:customerId})
+    }   
   })
   .then(response=>{
     if(response.status !== 200) throw new Error(response.status)

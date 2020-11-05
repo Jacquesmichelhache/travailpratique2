@@ -1,4 +1,4 @@
-window.overlayFactory = function (panelWidth = "500px", panelHeight = "75%", userOptions = {}) {
+export let overlayFactory = function (panelWidth = "500px", panelHeight = "auto", userOptions = {}) {
 
   let overlay = document.createElement("div");
   let columnFlex = document.createElement("div");
@@ -6,22 +6,22 @@ window.overlayFactory = function (panelWidth = "500px", panelHeight = "75%", use
   let panelColumnFlex = document.createElement("div");
 
   let options = {
-      removeWhenClosed: false,
+      removeWhenClosed: true,
       clickBackgroundToClose:true,
       minWidth: "",
       maxWidth: "",
-      minHeight: "",
+      minHeight: "400px",
       maxHeight: "",
-      stopPropagation:true,
+      stopPropagation:false,
   }
   options = { ...JSON.parse(JSON.stringify(options)), ...userOptions}
 
-  columnFlex.className = "d-flex flex-column flex-nowrap align-items-center justify-content-center";
+  columnFlex.className = "d-flex flex-column flex-nowrap align-items-center";
   columnFlex.style.backgroundColor = "transparent";
   columnFlex.style.height = "100%";
   columnFlex.dataset["overlay"] = "true";
 
-  panel.className = "d-flex flex-column flex-nowrap";
+  panel.className = "d-flex flex-column flex-nowrap align-items-center";
   panel.style.position = "relative";
   panel.style.width = panelWidth;
   panel.style.height = panelHeight;   
@@ -30,7 +30,9 @@ window.overlayFactory = function (panelWidth = "500px", panelHeight = "75%", use
   panel.style.minHeight = options.minHeight;
   panel.style.maxHeight = options.maxHeight;
   panel.style.backgroundColor = "white";
-  panel.style.padding = "10px";
+  panel.style.padding = "20px";
+  panel.style.marginTop = "20px";
+
 
   panelColumnFlex.className = "d-flex flex-column flex-nowrap";
   panelColumnFlex.style.overflow = "auto";
@@ -68,7 +70,7 @@ window.overlayFactory = function (panelWidth = "500px", panelHeight = "75%", use
   {
       domElement: overlay,
       on: function () {
-          overlay.style.display = "block";
+          $(overlay).fadeIn();          
       },
       off: function () {
           $(overlay).fadeOut(250, function () {
@@ -80,7 +82,14 @@ window.overlayFactory = function (panelWidth = "500px", panelHeight = "75%", use
       getBodyElement: function () {
           return panelColumnFlex;
       },
-      removeWhenClosed:false
+      removeWhenClosed:false,
+      append:function(el){
+          if(el instanceof HTMLElement){
+            panelColumnFlex.appendChild(el)
+          }  else if(typeof el === "string"){
+            panelColumnFlex.innerHTML = el;
+          }       
+      }      
   };
   return returnObject;
 };

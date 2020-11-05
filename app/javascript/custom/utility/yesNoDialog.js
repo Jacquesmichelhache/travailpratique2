@@ -1,4 +1,4 @@
-window.yesNoDialog = function(clientParams= {}){
+export function yesNoDialog(clientParams= {}){
 
   let defaultParams = {
     title:"Confirm operation",

@@ -3,11 +3,24 @@ class CustomersController < ApplicationController
   
   #GET
   def show   
-    @customers =  current_user.customers
-    @customer_data = @customers.collect{|x| x.attributes}.to_json
+   
+   
+      
+  end
 
-    @new_customer = current_user.customers.build
-  
+  #POST
+
+  #POST
+  def all
+
+    if current_user != nil then
+      render  json:{operation_status:"success", 
+        value: current_user.customers.collect{|x| x.attributes}.to_json}  
+    else
+      render  json:{operation_status:"error", 
+        error_message: "no user is logged in"}  
+    end
+
   end
 
   #POST
@@ -80,6 +93,37 @@ class CustomersController < ApplicationController
     end
 
   end
+
+
+  #POST
+  def creationform
+
+    @new_customer = current_user.customers.build()
+
+    begin
+    render  json: {operation_status:"success", 
+      customerView: render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
+    }
+    rescue Exception => e
+      render  json:{operation_status:"error", error_message: e.message}  
+    end
+
+  end
+
+  def editform   
+
+    begin
+      @cust = current_user.customers.find(params[:id])
+
+      render  json: {operation_status:"success", 
+        htmlString: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals:{:@cust => @cust})
+      }
+    rescue Exception => e
+      render  json:{operation_status:"error", error_message: e.message}  
+    end
+
+  end
+
 
   #POST
   def create

@@ -16,28 +16,33 @@ require("bootstrap")
 
 //utility
 require("../custom/utility/snackbar")
+require("../custom/utility/snackbar2")
 require("../custom/utility/yesNoDialog")
 require("../custom/utility/overlay")
 require("../custom/aggrid_helpers/edit_column_aggrid")
 
 //customers ajax
-require("../custom/customers/delete_customer")
-require("../custom/customers/get_customer_info")
+// require("../custom/customers/ajax/delete_customer")
+// require("../custom/customers/ajax/get_customer_info")
 
 //contacts ajax
-require("../custom/contacts/delete_contact")
-require("../custom/contacts/create_contact")
-require("../custom/contacts/new_contact")
-require("../custom/contacts/update_contact")
-require("../custom/contacts/all_contacts")
-
+// require("../custom/contacts/delete_contact")
+// require("../custom/contacts/create_contact")
+// require("../custom/contacts/new_contact")
+// require("../custom/contacts/update_contact")
+// require("../custom/contacts/all_contacts")
 
 let jQuery = require("jquery");
+
+require('webpack-jquery-ui');
+require('webpack-jquery-ui/css');
+
+
 
 // import jQuery from "jquery";
 global.$ = global.jQuery = jQuery;
 window.$ = window.jQuery = jQuery;
 
-require('webpack-jquery-ui');
-require('webpack-jquery-ui/css');
+
+
 

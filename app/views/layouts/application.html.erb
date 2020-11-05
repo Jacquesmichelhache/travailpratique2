@@ -2,16 +2,19 @@
 <html>
   <head>
     <title>Myapp</title>
+   
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <%= csp_meta_tag %>  
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
- 
- 
+     
   </head>
+  
 
   <body>
+  <div id="snackbar" style="z-index:1000"></div>
     <%= render 'layouts/header' %>  
     <div class="container">
        <%= yield %>
@@ -19,5 +22,11 @@
   </body>
 
     
-  <div id="snackbar"></div>
+  
 </html>
+
+<script>
+  //provides applicating routing urls and paths
+  let routes = JSON.parse('<%= raw(@routes.to_json) %>')
+  window.appRoutes = routes
+</script>

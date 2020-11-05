@@ -1,7 +1,4 @@
- 
-<div class="d-flex flex-row justify-content-center">
-
-  <div id="cust_edit_errors"></div>     
+ <div id="cust_edit_errors"></div>     
 
   <%= form_with(model: @cust, url: customers_update_path , method: "post", html: {id: :edit_customer_form, style: "max-width:600px;flexgrow:1;width:100%"}, scope: "edit") do |n| %>
     <div name="header" class="form_title">  
@@ -16,7 +13,7 @@
       <%= n.text_field :name, class: 'form-control' %>
 
       <%= n.label :"Start date" %>
-      <%= n.text_field :relationshipstart,{ autocomplete: "disabled", readonly: "readonly",class: 'form-control',  value: @cust.relationshipstart.strftime("%d-%m-%Y") } %>
+      <%= n.text_field :relationshipstart,{ autocomplete: "disabled", readonly: "readonly",class: 'form-control datepicker',  value: @cust.relationshipstart.strftime("%d-%m-%Y") } %>
 
       <%= n.label :"Activity type" %>            
       <%= n.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
@@ -45,10 +42,10 @@
     </div>          
   <% end %>  
       
-</div>
 
 
 
+<%# 
 
 <script type="text/javascript">  
  
@@ -84,4 +81,4 @@
   })
 
  
-</script>
+</script> %>

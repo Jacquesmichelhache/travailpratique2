@@ -3,18 +3,20 @@
       Customer list
 </div>
 
-<div class="d-flex flex-row align-items-end justify-content-between"> 
+<div name="body"  id="customer_app"></div>
+
+
+</div name="footer" >
+
+<div>
+
+
+<%# <div class="d-flex flex-row align-items-end justify-content-between"> 
   <input id="customer_filter" type="text" placeholder="filter.." class="form-control customer-filter-input" > 
   <button id="newCustomerBtn" class="btn btn-sm btn-dark">New Customer</button>
-</div>
+</div> %>
 
 <div id="customer_grid" class="ag-theme-alpine" style="width:auto;border:none;margin-top:20px"></div>
-
-
-
-<div id="newCustomerContainer" style="display:none">
-  <%= render 'customers/new_customer_form' %>
-</div>
 
 
 
@@ -22,6 +24,9 @@
   <div id="edit-overlay" class="overlay">
     <div class="row no-gutters">
       <div class="col-sm-12 col-md-8 offset-md-2">
+
+
+
         <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn"> 
 
           <h2 id="customer-name" name="header" class="login_title" style="margin:0px 0px 25px 0px">  
@@ -43,135 +48,15 @@
           </div>
 
         </div>
+
+
+
+        
       </div>
     </div>
   </div>
 </div>
 
 
+<%= javascript_pack_tag 'customers_home' %>
 
-
-<script type="text/javascript">  
-  let costumer_id = -1;
- 
-
-  $("#newCustomerBtn").on("click",()=>{
-     $("#newCustomerContainer").fadeIn()
-  }); 
-
-  //closes edit contact overlay only when user clicks outside of the panel
-  let edit_overlay = document.getElementById("edit-overlay")
-  edit_overlay.addEventListener("mousedown", (e) => {
-        if (e.path[1] && e.path[1] == edit_overlay || e.path[0] == edit_overlay) {
-          $("#customer_ctn").fadeOut();
-        }
-  }) 
-
-
-  function setEvents(){ 
-    //init datepicker
-    $("#edit_relationshipstart").datepicker({
-      locale: "en",
-      sideBySIde: true,
-      dateFormat: 'dd-m-yy'     
-    });    
-  }
-
-
-  async function show_edit_panel(cust_id = null){  
-    let customer_info = await getCustomer(cust_id,"<%= customers_edit_url %>","<%= root_url%>")
-    costumer_id = cust_id
-
-    $("#customer-panel").empty()
-    $("#contacts-panel").empty()
-   // $("#contacts_page_script").remove(0)
-     
-    $("#customer-name").html(customer_info.customerName)
-    $("#customer-panel").append(customer_info.customerView)
-    $("#contacts-panel").append(customer_info.contactView)
-   
-    $("#customer_ctn").fadeIn()     
-
-    //delays execution to ensure that the views are rendered in the DOM
-    setTimeout(()=>setEvents(),300);
-       
-  }
-  
-
-  let deleteButtonCallback = async (params)=>{
-    //params is an agGrid object
-     let result = await yesNoDialog();
-
-    if(result === "yes"){
-
-      //delete item                
-      let response = await deleteCustomer(params.data.id,"<%= customers_delete_url %>",'<%= root_url%>')
-
-      if(response.operation_status === "success"){          
-        location.reload()
-      }else{
-        showSnackBar(response.operation_status + ": "+response.error_message)
-      }
-    } 
-  }
-  let editButtonCallBack = (params) =>{
-    show_edit_panel(params.data.id);  
-  }
-
-  function dateFormatter(params){
-    let dateAsString = params.data.relationshipstart   
-    let dateAsObject = new Date(Date.parse(dateAsString));    
-    return dateAsObject.getUTCDate() + "/" + dateAsObject.getUTCMonth() + "/" + dateAsObject.getUTCFullYear();
-  }  
-
-  function dateComparator(date1, date2) {
-    let dateObject1 = new Date(date1);
-    let dateObject2 = new Date(date2);   
-
-    return dateObject1.getTime() - dateObject2.getTime();
-  }
-
-
-  let defaultColDef = {
-    cellStyle: {"line-height":"60px","font-size":"16px"},
-    filter: true,
-    sortable:true ,
-    resizable : true
-  }
-  
-
-  let customers_column_definitions = [
-    {headerName : "Name", field : "name"   },
-    {headerName : "Start Date", field : "relationshipstart", valueFormatter:dateFormatter,comparator:dateComparator},
-    {headerName : "Activity Type", field : "activitytype"},
-    {headerName : "Email Info", field : "infoemail"},
-    {headerName:"", width:120, cellRenderer:"ControlsCellRenderer", pinned: "left",resizable:false,filter:false,sortable:false,flex:2}]
-
-
-  let gridOptions = {
-    defaultColDef:defaultColDef,
-    columnDefs: customers_column_definitions,
-    rowData: JSON.parse('<%= raw(@customer_data) %>'),
-    domLayout:"autoHeight",
-    components:{
-      ControlsCellRenderer:window.controlsCellRenderer(deleteButtonCallback,editButtonCallBack)
-    },
-    onRowDataChanged:function(event){
-      let ids = customers_column_definitions.map((col)=>col.field)
-      event.columnApi.autoSizeColumns(ids);
-    },
-    suppressCellSelection: true,
-    rowHeight : 60
-  };
-
-
-  document.addEventListener('DOMContentLoaded', function(){
-    let gridDiv = document.querySelector('#customer_grid');
-    let table = new agGrid.Grid(gridDiv, gridOptions);
-
-    $("#customer_filter").on("input",(e)=>{
-      table.gridOptions.api.setQuickFilter(e.target.value)
-    })
-  });
-
-</script>

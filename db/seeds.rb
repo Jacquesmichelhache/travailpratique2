@@ -42,14 +42,20 @@ customers.each{ |customer|
 }
 
 
-user.customers.create!(name: "customer with no contacts",
-  relationshipstart: Time.zone.now,
-  addresscity: "addresscity",
-  addresspostalcode: "E1A7S8",
-  addressstreet: "addressstreet",
-  addressapt: "addressapt",
-  activitytype: Customer::activitytypes[:technology],
-  infoemail: "jacques@dsda.com")
+10.times do
+  
+  user.customers.create!(name: "customer with no contacts",
+    relationshipstart: Time.zone.now,
+    addresscity: "addresscity",
+    addresspostalcode: "E1A7S8",
+    addressstreet: "addressstreet",
+    addressapt: "addressapt",
+    activitytype: Customer::activitytypes[:technology],
+    infoemail: "jacques@dsda.com")
+  
+end
+  
+
 
 
 
