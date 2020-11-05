@@ -1,4 +1,4 @@
-export let overlayFactory = function (panelWidth = "500px", panelHeight = "auto", userOptions = {}) {
+export let overlayFactory = function (panelWidth = "75%", panelHeight = "auto", userOptions = {}) {
 
   let overlay = document.createElement("div");
   let columnFlex = document.createElement("div");
@@ -20,6 +20,7 @@ export let overlayFactory = function (panelWidth = "500px", panelHeight = "auto"
   columnFlex.style.backgroundColor = "transparent";
   columnFlex.style.height = "100%";
   columnFlex.dataset["overlay"] = "true";
+  
 
   panel.className = "d-flex flex-column flex-nowrap align-items-center";
   panel.style.position = "relative";
@@ -36,6 +37,7 @@ export let overlayFactory = function (panelWidth = "500px", panelHeight = "auto"
 
   panelColumnFlex.className = "d-flex flex-column flex-nowrap";
   panelColumnFlex.style.overflow = "auto";
+  panelColumnFlex.style.width = "100%"
   panelColumnFlex.style.height = "100%";
 
 
@@ -65,6 +67,9 @@ export let overlayFactory = function (panelWidth = "500px", panelHeight = "auto"
       }
   })
   overlay.appendChild(columnFlex);
+
+
+  document.body.appendChild(overlay)
 
   let returnObject =
   {

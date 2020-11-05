@@ -7,7 +7,7 @@ export let editCustomerFormFactory = (function(){
   return function(userParams = {}){
     //private context    
 
-    let defaultParams = {id:-1, overelay:null, onCustomerChange:null}
+    let defaultParams = {customer_id:-1, onCustomerChange:null}    
     let params = {...defaultParams,...userParams}
     let layout = {wrap:null}   
 
@@ -50,9 +50,8 @@ export let editCustomerFormFactory = (function(){
       });
     }
 
-
     async function createLayout(){
-      let form = await get_edit_customer_form(params.id, window.appRoutes.customers_edit_form_path, window.appRoutes.root_url)
+      let form = await get_edit_customer_form(params.customer_id, window.appRoutes.customers_edit_form_path, window.appRoutes.root_url)
 
       let wrap = document.createElement("div")
 
@@ -68,11 +67,11 @@ export let editCustomerFormFactory = (function(){
       await createLayout();
     }
 
-
     //helpers
     function registerToUpdate(obs){
       updateObservers.push(obs);
     }
+
     function update_notify(){
       updateObservers.forEach((obs)=>{
         try{
@@ -82,8 +81,6 @@ export let editCustomerFormFactory = (function(){
         }
       })
     }
-
-
 
     //public context (api)
     return  {

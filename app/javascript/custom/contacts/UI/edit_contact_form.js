@@ -59,16 +59,11 @@ export let customerInformationFactory = (function(){
       //create contact tab and its content
       let contactTab = tabLayout.createTab({text:"Contacts"})
       let contactsPage = contactsPageFactory({customer_id:params.customer_id});
-      await contactsPage.init();
-      await contactsPage.build();
-      contactTab.append(contactsPage.getWrap())
-      contactTab.addClickCallBack(()=>{
-        setTimeout(()=>contactsPage.autoSizeColumns(),250)
-      })
+      contactsPage.init();
     
       overlay.append(tabLayout.getWrap())     
 
-     // document.body.appendChild(overlay.domElement)
+      document.body.appendChild(overlay.domElement)
 
 
 

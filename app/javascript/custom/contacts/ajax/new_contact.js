@@ -1,5 +1,4 @@
-window.getCustomer = async function (customerId = null,url = "",redirect_url = "") {
-  
+export let getNewContactForm = async function (customer_id = null, url = "") {  
 
   let x = document.getElementsByName("csrf-token")[0];
   let XSRF = x.content;
@@ -15,7 +14,7 @@ window.getCustomer = async function (customerId = null,url = "",redirect_url = "
       "content-type":"application/json",
       "Accept":"application/json"
     },
-    body:JSON.stringify({id:customerId})
+    body:JSON.stringify({customer_id:customer_id})
   })
   .then(response=>{
     if(response.status !== 200) throw new Error(response.status)
@@ -25,7 +24,7 @@ window.getCustomer = async function (customerId = null,url = "",redirect_url = "
     return data  
   }).catch(function(e){
     if(e.Error == 401){
-      window.location.href = redirect_url
+      alert(e)
     }
   })
 

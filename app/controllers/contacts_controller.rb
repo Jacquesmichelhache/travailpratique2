@@ -9,7 +9,7 @@ class ContactsController < ApplicationController
  
 
   #POST
-  def all_contacts
+  def customer_contacts
     begin
       customer_id = params[:customer_id]
       customer = Customer.find(customer_id)
@@ -29,7 +29,7 @@ class ContactsController < ApplicationController
       @new_contact = @customer.contacts.build()
     
       render  json: {operation_status:"success", 
-        contactForm: render_to_string(partial: 'contacts/new_form',
+        value: render_to_string(partial: 'contacts/new_form',
           :formats => [:html], 
           layout: false, 
           locals: {:@new_contact => @new_contact, :@customer => @customer}),        

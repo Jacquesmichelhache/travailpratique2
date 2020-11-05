@@ -1,7 +1,7 @@
 import {datepicker} from 'jquery-ui/ui/widgets/datepicker';
-import {getCustomers} from './ajax/all_customers';
+import {getCustomers} from './ajax/get_all_customers';
 import {yesNoDialog} from '../utility/yesNoDialog';
-import {control_bar_v1} from './UI/home_control_bar';
+import {control_bar_v1} from '../utility/control_bar_v1';
 
 import {customerFormFactory} from './UI/new_customer_form';
 import {customerInformationFactory} from './UI/customer_information';
@@ -39,49 +39,7 @@ export let homeFactory = (function homeAPI(){
     let customersTable = null;
     let customersTableOptions = null;
     let costumer_id = -1; 
-    let controlBar = null
-
-    // $("#newCustomerBtn").on("click",()=>{
-    //     $("#newCustomerContainer").fadeIn()
-    // }); 
-
-    //closes edit contact overlay only when user clicks outside of the panel
-    // let edit_overlay = document.getElementById("edit-overlay")
-    // edit_overlay.addEventListener("mousedown", (e) => {
-    //       if (e.path[1] && e.path[1] == edit_overlay || e.path[0] == edit_overlay) {
-    //         $("#customer_ctn").fadeOut();
-    //       }
-    // }) 
-
-
-    // function setEvents(){ 
-    //   //init datepicker
-    //   $("#edit_relationshipstart").datepicker({
-    //     locale: "en",
-    //     sideBySIde: true,
-    //     dateFormat: 'dd-m-yy'     
-    //   });    
-    // }
-
-
-    // async function show_edit_panel(cust_id = null){  
-    //   let customer_info = await getCustomer(cust_id,window.appRoutes.customers_edit_url,window.appRoutes.root_url)
-    //   costumer_id = cust_id
-
-    //   $("#customer-panel").empty()
-    //   $("#contacts-panel").empty()
-    //   // $("#contacts_page_script").remove(0)
-        
-    //   $("#customer-name").html(customer_info.customerName)
-    //   $("#customer-panel").append(customer_info.customerView)
-    //   $("#contacts-panel").append(customer_info.contactView)
-      
-    //   $("#customer_ctn").fadeIn()     
-
-    //   //delays execution to ensure that the views are rendered in the DOM
-    //   setTimeout(()=>setEvents(),300);
-          
-    // }
+    let controlBar = null 
 
     let deleteButtonCallback = async (params)=>{
       //params is an agGrid object
@@ -97,9 +55,7 @@ export let homeFactory = (function homeAPI(){
         if(response == null){
           showSnackBar("Error: could not delete customer")
         }else if(response.operation_status === "success"){   
-          await refreshCustomersTable()       
-          // let customers = await getCustomers(window.appRoutes.customers_all_path,window.appRoutes.root_url)
-          // setCustomersTable(JSON.parse(customers.value))
+          await refreshCustomersTable()
         }else{
           showSnackBar(response.operation_status + ": "+response.error_message)
         }
@@ -108,15 +64,14 @@ export let homeFactory = (function homeAPI(){
     }
 
     let editButtonCallBack = (params) =>{
-      let form = customerInformationFactory({id: params.data.id,
+      let form = customerInformationFactory({customer_id: params.data.id,
           onCustomerChange:()=>{
             form.close();
             refreshCustomersTable();
             }
         })
 
-      form.show();
-      //show_edit_panel(params.data.id);  
+      form.show();     
     }
 
     function newCustomer(){
@@ -205,9 +160,9 @@ export let homeFactory = (function homeAPI(){
     }
 
     async function initControlBar(){
-      controlBar = control_bar_v1();
+      controlBar = control_bar_v1({newText:"New Customer"});
       controlBar.registerToFilterChangeEvent(filterTable)
-      controlBar.registerToNewCustomerEvent(newCustomer)
+      controlBar.registerToNewEvent(newCustomer)
       controlBar.init(); 
     }  
     async function builtControlBar(){

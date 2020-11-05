@@ -55,9 +55,13 @@ class ApplicationController < ActionController::Base
         :customers_creation_form_url => customers_creationform_url,
         :customers_creation_form_path => customers_creationform_path,
         :customers_edit_form_path => customers_editform_path,
-        :customers_edit_form_url => customers_editform_url
-
-       
+        :customers_edit_form_url => customers_editform_url,
+        :contacts_customer_contacts_path => contacts_customer_contacts_path,
+        :contacts_customer_contacts_url => contacts_customer_contacts_url,
+        :contacts_delete_path =>  contacts_delete_path,
+        :contacts_delete_url => contacts_delete_url,
+        :contacts_new_path => contacts_new_path,
+        :contacts_new_url =>contacts_new_url
         }
     end
   

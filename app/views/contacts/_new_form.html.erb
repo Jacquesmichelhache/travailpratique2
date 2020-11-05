@@ -1,113 +1,35 @@
-<div id="contact_create_overlay" class="overlay">
-  <div class="row no-gutters">
-    <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4">
-      <div class="d-flex flex-column align-items-center justify-content-center overlay-new-contact">  
+ 
+<div id="contact_creation_errors"></div>    
 
-        <div id="contact_creation_errors"></div>    
+<%= form_with(model: @new_contact, url: contacts_create_path , method: "post", html: {id: :create_contact_form}, scope: "create") do |n| %>
+  <div name="header" class="form_title">  
+    Create a new contact
+  </div>
 
-        <%= form_with(model: @new_contact, url: contacts_create_path , method: "post", html: {id: :create_contact_form}, scope: "create_contact") do |n| %>
-          <div name="header" class="form_title">  
-            Create a new contact
-          </div>
+  <div name="create_contact"  class="form_body">      
 
-          <div name="create_contact"  class="form_body">      
+    <%= hidden_field_tag "customer_id", @customer.id %>
 
-            <%= hidden_field_tag "customer_id", @customer.id %>
+    <%= n.label :Name %>
+    <%= n.text_field :name, class: 'form-control' %>
 
-            <%= n.label :Name %>
-            <%= n.text_field :name, class: 'form-control' %>
-
-            <%= n.label :"First name" %>
-            <%= n.text_field :firstname, class: 'form-control' %>  
-          
-
-            <%= n.label :"Telephone" %>
-            <%= n.text_field :tel, class: 'form-control' %>
-
-            <%= n.label :"Extension" %>
-            <%= n.text_field :ext, class: 'form-control' %> 
-
-            <%= n.label :"Email" %>
-            <%= n.text_field :email, class: 'form-control' %> 
-
-          </div>  
-
-          <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
-            <%= n.submit "Create Contact", {id: :create_contact_btn, class: "btn btn-primary"} %>              
-          </div>          
-        <% end %>   
-
-      </div> 
-    </div>   
-  </div>   
-</div>
-
-
-
-<script type="text/javascript"> 
-
-  //create a private scope
-  (()=>{
-
-    //closes edit overlay only when user clicks outside of the panel
-    let create_overlay = document.getElementById("contact_create_overlay")
-    create_overlay.addEventListener("mousedown", (e) => {
-          if (e.path[1] && e.path[1] == create_overlay || e.path[0] == create_overlay) {
-            $("#create_contact_container").fadeOut();
-          }
-    })
-
-    //After user submits form, disable the submit button and clear errors
-    $("#create_contact_form").submit(()=>{
-
-      $("#create_contact_btn").attr("disabled",true);
-      $("#contact_creation_errors").empty();
-
-      return true; //submit form (false to cancel)
-    }); 
-
-
-  //handles controller response to contact creation
-  $("#create_contact_form").on('ajax:success', createContactResponse)
+    <%= n.label :"First name" %>
+    <%= n.text_field :firstname, class: 'form-control' %>  
   
-  function createContactResponse(event){
-    [data, status, xhr] = event.detail   
 
-    if(data.status === "valid"){
-      
-      showSnackBar("Successfully created a contact")
+    <%= n.label :"Telephone" %>
+    <%= n.text_field :tel, class: 'form-control' %>
 
-      //reloads the customer table by refreshing the page
-      $("#create_contact_container").fadeOut(200, async ()=>{
-        
-        let response = await window.all_contacts('<%= @customer.id%>', '<%= contacts_all_contacts_url %>')
+    <%= n.label :"Extension" %>
+    <%= n.text_field :ext, class: 'form-control' %> 
 
-        if(response && response.operation_status === "success"){
-          window._contacts_table.gridOptions.api.setRowData(JSON.parse(response.value))
-        }
+    <%= n.label :"Email" %>
+    <%= n.text_field :email, class: 'form-control' %> 
 
-      })    
+  </div>  
 
-    }else{
-      console.log(data)
-      showSnackBar("Error: Unable to create contact")
+  <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
+    <%= n.submit "Create Contact", {id: :create_contact_btn, class: "btn btn-primary"} %>              
+  </div>          
+<% end %>   
 
-      if(typeof data.errors === "object"){
-
-         $("#contact_creation_errors").empty()
-
-        //show list of errors to client
-        Object.keys(data.errors).forEach(key => {
-            let errorLabel = document.createElement("div");
-            errorLabel.textContent = data.errors[key][0]
-            errorLabel.className = "invalid-information"
-            $("#contact_creation_errors").append(errorLabel)
-        });
-      } 
-    }
-  }
-
-
-
-  })();
-</script>

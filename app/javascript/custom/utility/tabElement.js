@@ -63,6 +63,7 @@ export let tabElementFactory = (function(){
       let defaultParams = {
         text:"tab"
       }
+      let clickCallBacks = [];
       let params = {...defaultParams,...userParams}
 
       let li = document.createElement("li");
@@ -78,6 +79,7 @@ export let tabElementFactory = (function(){
       link.href = "#" + id;
       link.setAttribute("role","tab");
       link.textContent = params.text;
+      link.addEventListener("click",()=>notify())
 
       contentTab.className = isFirstTab? "tab-pane fade show active ": "tab-pane fade"
       contentTab.id = id
@@ -94,9 +96,22 @@ export let tabElementFactory = (function(){
           contentTab.appendChild(el)
         } 
       }
+      function addClickCallBack(callback){
+        clickCallBacks.push(callback)
+      }
+      function notify(){
+        clickCallBacks.forEach((callback)=>{
+          if(typeof callback === "function"){            
+            callback();
+          }
+        })
+      }
 
       isFirstTab = false
-      return {append }      
+      return {
+        append,
+        addClickCallBack
+       }      
     }
 
 
