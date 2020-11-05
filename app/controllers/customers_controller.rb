@@ -19,7 +19,7 @@ class CustomersController < ApplicationController
     
       render  json: {operation_status:"success", 
         customerView: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals: {:@cust => @cust}),
-        contactView: render_to_string(partial: 'contacts/page',:formats => [:html], layout: false, locals: {:@contacts => @cust.contacts}),
+        contactView: render_to_string(partial: 'contacts/page',:formats => [:html], layout: false, locals: {:@cust => @cust}),
         customerName: @cust.name
       }
     

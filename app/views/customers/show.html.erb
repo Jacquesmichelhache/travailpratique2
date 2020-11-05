@@ -53,17 +53,13 @@
 
 <script type="text/javascript">  
   let costumer_id = -1;
-
-  $(".overlay").on("click",(e)=>{
-    $("#newCustomerContainer").fadeOut()
-  })
+ 
 
   $("#newCustomerBtn").on("click",()=>{
      $("#newCustomerContainer").fadeIn()
   }); 
 
-
-  //closes edit overlay only when user clicks outside of the panel
+  //closes edit contact overlay only when user clicks outside of the panel
   let edit_overlay = document.getElementById("edit-overlay")
   edit_overlay.addEventListener("mousedown", (e) => {
         if (e.path[1] && e.path[1] == edit_overlay || e.path[0] == edit_overlay) {
@@ -88,6 +84,7 @@
 
     $("#customer-panel").empty()
     $("#contacts-panel").empty()
+   // $("#contacts_page_script").remove(0)
      
     $("#customer-name").html(customer_info.customerName)
     $("#customer-panel").append(customer_info.customerView)

@@ -9,19 +9,16 @@ require("@rails/activestorage").start()
 require("channels")
 
 
-//require("jquery-datetimepicker")
 global.agGrid = require('ag-grid-community')
-
-//import the bootstrap javascript module
-//import "bootstrap"
 
 require("popper.js")
 require("bootstrap")
 
-require("../custom/snackbar")
-require("../custom/yesNoDialog")
-require("../custom/overlay")
-require("../custom/edit_column_aggrid")
+//utility
+require("../custom/utility/snackbar")
+require("../custom/utility/yesNoDialog")
+require("../custom/utility/overlay")
+require("../custom/aggrid_helpers/edit_column_aggrid")
 
 //customers ajax
 require("../custom/customers/delete_customer")
@@ -30,7 +27,9 @@ require("../custom/customers/get_customer_info")
 //contacts ajax
 require("../custom/contacts/delete_contact")
 require("../custom/contacts/create_contact")
+require("../custom/contacts/new_contact")
 require("../custom/contacts/update_contact")
+require("../custom/contacts/all_contacts")
 
 
 let jQuery = require("jquery");

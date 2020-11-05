@@ -9,8 +9,7 @@ class Customer < ApplicationRecord
 
 
   #validations
-  before_validation :upcase_email
- 
+  before_validation :upcase_email 
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i  
   validates :infoemail, presence: {message: "Email cannot be blank"}, length:{maximum:255},

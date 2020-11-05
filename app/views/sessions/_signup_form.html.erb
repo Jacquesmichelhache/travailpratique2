@@ -1,12 +1,12 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name),namespace:"signup") do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div name="header" class="login_title">  
+  <div name="header" class="form_title">  
     Sign up! 
   </div>
 
 
-  <div name="sign-up-body"  class="login_body">  
+  <div name="sign-up-body"  class="form_body">  
     <div class="field">
       <%= f.label :email %><br />
       <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>

@@ -1,58 +1,69 @@
-<div class="overlay">
+<div id="new_customer_overlay" class="overlay">
   <div class="row no-gutters">
     <div class="col-sm-12 col-md-6 offset-md-3">
       <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn">   
  
  
-        <div id="cust_creation_errors"></div>     
-            <%= form_with(model: @new_customer, html: {id: :create_customer_form}, scope: "create") do |n| %>
-              <div name="header" class="login_title">  
-                Create a new customer
-              </div>
+        <div id="cust_creation_errors"></div>    
 
-              <div name="login-body"  class="login_body">      
+        <%= form_with(model: @new_customer, html: {id: :create_customer_form}, scope: "create") do |n| %>
+          <div name="header" class="form_title">  
+            Create a new customer
+          </div>
 
-                <%= n.label :Name %>
-                <%= n.text_field :name, class: 'form-control' %>
+          <div name="new_customer_body"  class="form_body">      
 
-                <%= n.label :"Start date" %>
-                <%= n.text_field :relationshipstart, {autocomplete: "disabled", readonly: "readonly",class: 'form-control' } %>
+            <%= n.label :Name %>
+            <%= n.text_field :name, class: 'form-control' %>
 
-                <%= n.label :"Activity type" %>            
-                <%= n.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
-              
+            <%= n.label :"Start date" %>
+            <%= n.text_field :relationshipstart, {autocomplete: "disabled", readonly: "readonly",class: 'form-control' } %>
 
-                <%= n.label :"City" %>
-                <%= n.text_field :addresscity, class: 'form-control' %>
+            <%= n.label :"Activity type" %>            
+            <%= n.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
+          
 
-                <%= n.label :"Area code" %>
-                <%= n.text_field :addresspostalcode, class: 'form-control' %> 
+            <%= n.label :"City" %>
+            <%= n.text_field :addresscity, class: 'form-control' %>
 
-                <%= n.label :"Street" %>
-                <%= n.text_field :addressstreet, class: 'form-control' %> 
+            <%= n.label :"Area code" %>
+            <%= n.text_field :addresspostalcode, class: 'form-control' %> 
 
-                <%= n.label :"apt" %>
-                <%= n.text_field :addressapt, class: 'form-control' %> 
+            <%= n.label :"Street" %>
+            <%= n.text_field :addressstreet, class: 'form-control' %> 
 
-                <%= n.label :"Email" %>
-                <%= n.text_field :infoemail, class: 'form-control' %> 
+            <%= n.label :"apt" %>
+            <%= n.text_field :addressapt, class: 'form-control' %> 
 
-
-              </div>  
-
-              <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
-                <%= n.submit "Create Customer", {id: :create_customer_btn, class: "btn btn-primary"} %>              
-              </div>          
-            <% end %>           
-        </div>
+            <%= n.label :"Email" %>
+            <%= n.text_field :infoemail, class: 'form-control' %> 
 
 
+          </div>  
+
+          <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
+            <%= n.submit "Create Customer", {id: :create_customer_btn, class: "btn btn-primary"} %>              
+          </div>          
+        <% end %>   
+       
       </div> 
     </div>   
   </div>   
 </div>
 
 <script type="text/javascript"> 
+
+//create a private scope
+(()=>{
+
+  //closes create contact overlay only when user clicks outside of the panel
+  let new_customer_overlay = document.getElementById("new_customer_overlay")
+  new_customer_overlay.addEventListener("mousedown", (e) => {
+        if (e.path[1] && e.path[1] == new_customer_overlay || e.path[0] == new_customer_overlay) {
+          $("#newCustomerContainer").fadeOut();
+          $("#cust_creation_errors").empty();
+        }
+  }) 
 
   //init datepicker
   $("#create_relationshipstart").datepicker({
@@ -91,7 +102,7 @@
 
     }else{
 
-      showSnackBar("Error: unable to create customer")
+      showSnackBar("Error: Unable to create customer")
 
       if(typeof data.errors === "object"){
 
@@ -113,5 +124,7 @@
   document.body.addEventListener('ajax:error', function(event) {
       showSnackBar("Error: problem communicating with server")   
   })  
+
+})();
 
 </script>

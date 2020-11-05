@@ -19,5 +19,7 @@ Rails.application.routes.draw do
  
   #Contacts
   delete '/contacts/delete', to: 'contacts#destroy'
-  
+  post   '/contacts/new', to: 'contacts#new'
+  post '/contacts/create', to: 'contacts#create'
+  post '/contacts/all_contacts', to: 'contacts#all_contacts'
 end
