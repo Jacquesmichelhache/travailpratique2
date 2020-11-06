@@ -19,23 +19,22 @@ export let editCustomerFormFactory = (function(){
     //main methods
     function editCustomerResponse(event){  
       try{
-        const [data, status, xhr] = event.detail   
+        const [dto, status, xhr] = event.detail   
   
-        if(data.status === "valid"){
+        if(dto.status === "success"){
           
-          showSnackBar("Successfully updated customer")   
+          showSnackBar(dto.data.message)   
           update_notify(); 
           
           if(typeof params.onCustomerChange === "function"){
             params.onCustomerChange();
           }  
 
-        }else{
-          console.log(data)
-          showSnackBar("Error: Unable to update customer")
+        }else{         
+          showSnackBar(dto.data.message)
     
-          if(typeof data.errors === "object"){
-            showErrors(data.errors)         
+          if(typeof dto.data.value === "object"){
+            showErrors(dto.data.value)         
           } 
         }
       }catch(e){
@@ -57,23 +56,23 @@ export let editCustomerFormFactory = (function(){
 
     async function createLayout(){  
 
-      let response = await sendAjax({method: "POST",       
+      let dto = await sendAjax({method: "POST",       
             params:{id:params.customer_id} ,           
             url: window.appRoutes.customers_edit_form_path,
             redirect_url: window.appRoutes.root_url})
 
-      if(response && response.htmlString){
+      if(dto.status === "success"){
         let wrap = document.createElement("div")
 
         wrap.className = "d-flex flex-column align-items-center"
-        $(wrap).html(response.htmlString);
+        $(wrap).html(dto.data.value);
 
         $(wrap).find("#edit_customer_form").on('ajax:success', editCustomerResponse) 
 
         layout.wrap = wrap;
 
       }else{
-        showSnackBar("error loading customer information panel")
+        showSnackBar(dto.data.message)
       }
       
     }   

@@ -1,5 +1,5 @@
 class ContactsController < ApplicationController
-
+  include ApplicationHelper
 
   #GET
   def show 
@@ -13,9 +13,9 @@ class ContactsController < ApplicationController
     begin
       customer_id = params[:customer_id]
       customer = Customer.find(customer_id)
-      render  json:{operation_status:"success", value:customer.contacts.to_json}  
+      render json: success(customer.contacts, "Successfully retrieves customer contacts") 
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
+      render json: fail(e.message) 
     end
   end
 
@@ -28,15 +28,12 @@ class ContactsController < ApplicationController
       
       @new_contact = @customer.contacts.build()
     
-      render  json: {operation_status:"success", 
-        value: render_to_string(partial: 'contacts/new_form',
-          :formats => [:html], 
-          layout: false, 
-          locals: {:@new_contact => @new_contact, :@customer => @customer}),        
-      }    
-     
+      htmlString = render_to_string(partial: 'contacts/new_form', :formats => [:html], layout: false, 
+                                      locals: {:@new_contact => @new_contact, :@customer => @customer})
+
+      render json: success(htmlString, "Successfully retrieved contact form")        
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
+      render json: fail(e.message)  
     end
 
   end
@@ -47,11 +44,11 @@ class ContactsController < ApplicationController
     begin
       @cont= Contact.find(params[:contact_id])
 
-      render  json: {operation_status:"success", 
-        htmlString: render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
-      }
+      htmlString = render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
+      render json: success(htmlString, "Successfully retrieved contact information") 
+     
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
+      render json: fail(e.message)        
     end
 
   end
@@ -70,18 +67,13 @@ class ContactsController < ApplicationController
       if new_contact.valid? then
 
         new_contact.save
-        respond_to do |format|
-          format.json { render json:{status: :valid}}        
-        end
+        render json: success(nil, "Contact saved")         
       else
-        
-        respond_to do |format|
-          format.json { render json:{status: :invalid, errors: new_contact.errors}}        
-        end
+        render json: fail("Unable to create contact",new_contact.errors)          
       end
 
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message,customer_id:customer_id, customer:customer, p:p }  
+      render json: fail("Unable to create contact",e.message)       
     end
   end
 
@@ -95,45 +87,38 @@ class ContactsController < ApplicationController
 
       if contact != nil then
         if contact.update(p) then
-          respond_to do |format|
-            format.json { render json:{status: :valid, value: contact.to_json}}        
-          end
+          render json: success(contact, "Contact saved") 
         else
-          respond_to do |format|
-            format.json { render json:{status: :invalid, errors: contact.errors}}        
-          end
+          render json: fail("Unable to create contact", contact.errors)
         end
       else
 
       end      
     else
-      render  json:{ operation_status:"error", error_message:"Fatal internal error: current_user is nil"}  
+      render json: fail("Fatal internal error: current_user is nil")     
     end
 
   end
 
   #DELETE  
-  def destroy
-    # params[:customerId] and params[:contactId]    
+  def destroy    
 
     begin
       Contact.find(params[:contact_id] ).destroy 
 
       customer =  Customer.find(params[:customer_id] )
-
-      render  json:{operation_status:"success", 
-        error_message:"Contact successfully removed",
-      contacts: customer.contacts.collect{|x| x.attributes}.to_json} 
-
+      render json: success(customer.contacts.collect{|x| x.attributes}, "Contact successfully removed") 
+     
     rescue ActiveRecord::RecordNotFound
-      render  json:{ operation_status:"error", error_message:"Contact not found in database"}
+      render json: fail("Contact not found in database")  
+     
     rescue ActiveRecord::DeleteRestrictionError 
       #An assumption is made here that the customer has contacts
-      render  json:{ operation_status:"error", error_message:"Deletion of this contact is restricted"}
+      render json: fail("Deletion of this contact is restricted")       
     rescue ActiveRecord::RecordNotDestroyed
-      render  json:{ operation_status:"error", error_message:"Contact could not be deleted. contact admin"}  
+      render json: fail("Contact could not be deleted. contact admin")    
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
+      render json: fail(e.message)     
     end
 
   end
@@ -145,7 +130,5 @@ class ContactsController < ApplicationController
       params.require(:contact).permit(:name, :firstname, :email,
         :tel, :ext)
     end
-
-
 
 end

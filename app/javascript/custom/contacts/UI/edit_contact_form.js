@@ -28,11 +28,12 @@ export let editContactFormFactory = (function(){
 
     //called upon rails' successfull custumer creation
     function updateContactResponse(event){    
-      const [data, status, xhr] = event.detail   
+      const [dto, status, xhr] = event.detail   
   
-      if(data.status === "valid"){
+      
+      if(dto.status === "success"){
         
-        showSnackBar("Successfully saved contact")
+        showSnackBar(dto.data.message)
         overlay.close();
         changeNotify();   
         
@@ -41,38 +42,37 @@ export let editContactFormFactory = (function(){
         }  
   
       }else{
-        console.log(data)
-        showSnackBar("Error: Unable to save contact")
-  
-        if(typeof data.errors === "object"){
-          showErrors(data.errors)         
-        } 
+      
+        showSnackBar(dto.data.message)
+        showErrors(dto.data.value) 
       }
     }
 
     function showErrors(errors){
-      $("#contact_update_errors").empty()
+      if(typeof errors === "object"){
+        $("#contact_update_errors").empty()
   
-      //show list of errors to client
-      Object.keys(errors).forEach(key => {
-          let errorLabel = document.createElement("div");
-          errorLabel.textContent = errors[key][0]
-          errorLabel.className = "invalid-information"
-          $("#contact_update_errors").append(errorLabel)
-      });
+        //show list of errors to client
+        Object.keys(errors).forEach(key => {
+            let errorLabel = document.createElement("div");
+            errorLabel.textContent = errors[key][0]
+            errorLabel.className = "invalid-information"
+            $("#contact_update_errors").append(errorLabel)
+        });
+      }      
     }
 
     async function createLayout(){  
 
-      let response = await sendAjax({method: "POST", 
+      let dto = await sendAjax({method: "POST", 
             params:{contact_id:params.contact_id},             
             url: window.appRoutes.contacts_editform_path,
             redirect_url: window.appRoutes.root_url})
 
-      if(response && response.htmlString ){
+      if(dto && dto.status === "success" ){
         overlay = overlayFactory({width:"400px"});     
 
-        overlay.append(response.htmlString);
+        overlay.append(dto.data.value);
 
         //Give a few milliseconds for the DOM to be updated with the form BEFORE
         //executing the setters 

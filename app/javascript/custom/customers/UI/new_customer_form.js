@@ -23,46 +23,44 @@ export let customerFormFactory = (function(){
     //called upon rails' successfull custumer creation
     function createCustomerResponse(event){
       console.log("ajax response")
-      const [data, status, xhr] = event.detail   
+      const [dto, status, xhr] = event.detail   
   
-      if(data.status === "valid"){
+      if(dto.status === "success"){
         
-        showSnackBar("Successfully created a customer")
+        showSnackBar(dto.data.message)
         overlay.close();
         clientCreateNotify();       
   
-      }else{
-        console.log(data)
-        showSnackBar("Error: Unable to create customer")
-  
-        if(typeof data.errors === "object"){
-          showErrors(data.errors)         
-        } 
+      }else{      
+        showSnackBar(dto.data.message) 
+        showErrors(dto.data.value) 
       }
     }
 
     function showErrors(errors){
-      $("#cust_creation_errors").empty()
+      if(typeof errors === "object"){
+        $("#cust_creation_errors").empty()
   
-      //show list of errors to client
-      Object.keys(errors).forEach(key => {
+        //show list of errors to client
+        Object.keys(errors).forEach(key => {
           let errorLabel = document.createElement("div");
           errorLabel.textContent = errors[key][0]
           errorLabel.className = "invalid-information"
           $("#cust_creation_errors").append(errorLabel)
-      });
+        });
+      }      
     }
 
 
     async function show(){  
 
-      let response = await sendAjax({method: "POST",                   
+      let dto = await sendAjax({method: "POST",                   
             url: window.appRoutes.customers_creation_form_path,
             redirect_url: window.appRoutes.root_url})
 
-      if(response && response.htmlString ){
+      if(dto.status === "success"){
         overlay = overlayFactory({maxWidth:"500px"});  
-        overlay.append(response.htmlString);
+        overlay.append(dto.data.value);
 
         //init datepicker        
         //Give a few milliseconds for the DOM to be updated with the form BEFORE
@@ -73,7 +71,7 @@ export let customerFormFactory = (function(){
         },100)      
 
         overlay.show();
-      }       
+      }  
     }
 
     //Observer management

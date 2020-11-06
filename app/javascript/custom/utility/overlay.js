@@ -39,7 +39,9 @@ export let overlayFactory = function (userOptions = {}) {
   overlay.addEventListener("mousedown", (e) => {
 
       //close overlay if user mousedown on it, or apply user settings otherwise
-      if (e.path[0] == bootstrapRow || e.path[0] == overlay || e.path[0] == rowFlex) {
+      if (e.path[0] == bootstrapRow || e.path[0] == overlay || 
+          e.path[0] == rowFlex || e.path[0] ==  bootstrapCol) {
+            
           if (options.clickBackgroundToClose === true) {
               $(overlay).fadeOut(250, function () {
                   if (options.removeWhenClosed === true) {

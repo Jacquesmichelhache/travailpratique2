@@ -56,18 +56,18 @@ export let customersHomeFactory = (function homeAPI(){
       if(result === "yes"){
 
         //delete item                
-        let response = await sendAjax({method: "DELETE",
+        let dto = await sendAjax({method: "DELETE",
             params: {id:params.data.id},            
             url: window.appRoutes.customers_delete_path,
             redirect_url: window.appRoutes.root_url})
 
-        if(response == null){
+        if(dto == null){
           showSnackBar("Error: could not delete customer")
-        }else if(response.operation_status === "success"){ 
-          showSnackBar("Customer deleted!")  
+        }else if(dto.status === "success"){ 
+          showSnackBar(dto.data.message)  
           await refreshCustomersTable()
         }else{
-          showSnackBar(response.operation_status + ": "+response.error_message)
+          showSnackBar(dto.data.message)  
         }
       } 
     }
@@ -126,6 +126,9 @@ export let customersHomeFactory = (function homeAPI(){
 
       let customers = await getCustomers(); 
 
+      //stop if customers is null
+      if(customers == null) return
+
       //agGrid table setup. see ag-grid documentation for more information
       customersTableOptions = {
           defaultColDef:defaultColDef,
@@ -134,7 +137,7 @@ export let customersHomeFactory = (function homeAPI(){
           components:{
             ControlsCellRenderer:editRowComponent(deleteButtonCallback,editButtonCallBack)
           },
-          rowData:JSON.parse(customers.value),
+          rowData:customers.value,
           onRowDataChanged:function(event){
             let ids = customers_column_definitions.map((col)=>col.field)
             event.columnApi.autoSizeColumns(ids);
@@ -192,21 +195,21 @@ export let customersHomeFactory = (function homeAPI(){
     } 
 
     async function getCustomers(){
-      let customers = await sendAjax({method: "POST",
+      let dto = await sendAjax({method: "POST",
       url: window.appRoutes.customers_all_path, 
       redirect_url: window.appRoutes.root_url})
 
-      if(customers == null){
-        //window.location.href = window.appRoutes.root_url;
+      if(dto && dto.status === "success"){
+        return dto.data;        
       }else{
-        return customers;
+        //window.location.href = window.appRoutes.root_url;
       }
     }
 
     //helper method
     async function refreshCustomersTable(){
       let customers = await getCustomers();    
-      setCustomersTable(JSON.parse(customers.value))
+      setCustomersTable(customers.value)
     }
 
      //helper method

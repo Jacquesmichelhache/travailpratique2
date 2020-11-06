@@ -34,8 +34,7 @@ export let control_bar_v1 = (function(){
       filterInput.className = "form-control filter-input";
       filterInput.type = "text";
       filterInput.placeholder="filter.."
-      filterInput.addEventListener("input",(e)=>{
-        console.log("does it work")
+      filterInput.addEventListener("input",(e)=>{       
         filterChangeEventNotify(e.currentTarget.value);
       })
 

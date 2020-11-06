@@ -1,4 +1,6 @@
 class CustomersController < ApplicationController  
+  include ApplicationHelper
+
   before_action :authenticate_user!
   
   #GET
@@ -10,12 +12,11 @@ class CustomersController < ApplicationController
   #POST
   def all
 
-    if current_user != nil then
-      render  json:{operation_status:"success", 
-        value: current_user.customers.collect{|x| x.attributes}.to_json}  
+    if current_user != nil then  
+      value = current_user.customers.collect{|x| x.attributes}
+      render json: success(value)      
     else
-      render  json:{operation_status:"error", 
-        error_message: "no user is logged in"}  
+      render json: fail("no user is logged in") 
     end
 
   end  
@@ -26,18 +27,17 @@ class CustomersController < ApplicationController
     id = params[:id]   
     
     begin
-      current_user.customers.find(id).destroy        
-      render  json:{operation_status:"success", error_message:"customer successfully removed"}    
-
+      current_user.customers.find(id).destroy     
+      render json: success(nil, "Customer successfully removed")  
     rescue ActiveRecord::RecordNotFound
-      render  json:{ operation_status:"error", error_message:"customer not found in database"}
+      render json: fail("Customer not found in database")       
     rescue ActiveRecord::DeleteRestrictionError 
       #An assumption is made here that the customer has contacts
-      render  json:{ operation_status:"error", error_message:"cannot remove a customer with contacts"}
+      render json: fail("Cannot remove a customer with contacts")      
     rescue ActiveRecord::RecordNotDestroyed
-      render  json:{ operation_status:"error", error_message:"cannot delete a customer that has contacts!"}  
+      render json: fail("Cannot delete a customer that has contacts!")
     rescue
-      render  json:{ operation_status:"error", error_message:"unable to delete customer. Contact administrator"}  
+      render json: fail("Unable to delete customer. Contact administrator")     
     end
 
   end
@@ -54,19 +54,15 @@ class CustomersController < ApplicationController
 
       if customer != nil then
         if customer.update(p) then
-          respond_to do |format|
-            format.json { render json:{status: :valid, value: customer.to_json}}        
-          end
+          render json: success(customer, "Successfully updated customer")            
         else
-          respond_to do |format|
-            format.json { render json:{status: :invalid, errors: customer.errors}}        
-          end
+          render json: fail("Unable to save changes", customer.errors )       
         end
       else
 
       end      
     else
-      render  json:{ operation_status:"error", error_message:"Fatal internal error: current_user is nil"}  
+      render json: fail("Fatal internal error: current_user is nil")        
     end
 
   end
@@ -78,11 +74,11 @@ class CustomersController < ApplicationController
     @new_customer = current_user.customers.build()
 
     begin
-    render  json: {operation_status:"success", 
-      htmlString: render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
-    }
+      htmlString = render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
+      render json: success(htmlString)
+    
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
+      render json: fail(e.message)   
     end
 
   end
@@ -91,12 +87,11 @@ class CustomersController < ApplicationController
 
     begin
       @cust = current_user.customers.find(params[:id])
+      htmlString = render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals:{:@cust => @cust})
+      render json: success(htmlString, "successfully retrieved customer information")
 
-      render  json: {operation_status:"success", 
-        htmlString: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals:{:@cust => @cust})
-      }
     rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
+       render json: fail("Error retrieving customer information") 
     end
 
   end
@@ -118,14 +113,9 @@ class CustomersController < ApplicationController
     if new_customer.valid? then
 
       new_customer.save
-      respond_to do |format|
-        format.json { render json:{status: :valid}}        
-      end
-    else
-      
-      respond_to do |format|
-        format.json { render json:{status: :invalid, errors: new_customer.errors}}        
-      end
+      render json: success(nil, "Successfully created a customer")      
+    else    
+      render json: fail("Error creating customer",new_customer.errors)  
     end   
  
   end

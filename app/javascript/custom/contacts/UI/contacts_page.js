@@ -33,20 +33,19 @@ export let contactsPageFactory = (function(){
       if(result === "yes"){
 
         //delete item   
-        let response = await sendAjax({method: "DELETE", 
+        let dto = await sendAjax({method: "DELETE", 
             params:{customer_id:params.customer_id, contact_id: tableRow.data.id },             
             url: window.appRoutes.contacts_delete_path,
             redirect_url: window.appRoutes.root_url})
 
-        if(response == null){
-          showSnackBar("Error: could not delete contact")
-        }else if(response.operation_status === "success"){   
-          showSnackBar("Contact deleted!")
+        if(dto && dto.status === "success"){
+          showSnackBar(dto.data.message)
           await refreshContactsTable()
+        }else if(dto){
+          showSnackBar(dto.data.message)
         }else{
-          showSnackBar(response.operation_status + ": "+response.error_message)
-        }
-
+          showSnackBar("Error: could not delete contact")
+        }  
       } 
     }
 
@@ -97,7 +96,7 @@ export let contactsPageFactory = (function(){
           components:{
             ControlsCellRenderer:editRowComponent(deleteButtonCallback,editButtonCallBack)
           },
-          rowData: response && response.value? JSON.parse(response.value):null,
+          rowData: response.value,
           onRowDataChanged:function(event){
             autoSizeColumn();
           },
@@ -116,16 +115,22 @@ export let contactsPageFactory = (function(){
     }
 
     async function getCustomerContacts(customer_id){
-      return await sendAjax({method: "POST", 
+      let dto = await sendAjax({method: "POST", 
           params:{customer_id:customer_id},             
           url: window.appRoutes.contacts_customer_contacts_path,
           redirect_url: window.appRoutes.root_url})
+
+      if(dto && dto.status === "success"){
+        return dto.data
+      }else if(dto && dto.data){
+        showSnackBar(dto.data.message)
+      }else showSnackBar("fatal error in getCustomerContacts")
     }
 
     async function refreshContactsTable(){
       let response = await getCustomerContacts(params.customer_id)
          
-      setContactsTable(JSON.parse(response.value))
+      setContactsTable(response.value)
     }
 
     function setContactsTable(rowData){

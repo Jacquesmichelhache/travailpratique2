@@ -24,47 +24,45 @@ export let contactFormFactory = (function(){
 
     //called upon rails' successfull custumer creation
     function createContactResponse(event){    
-      const [data, status, xhr] = event.detail   
+      const [dto, status, xhr] = event.detail   
   
-      if(data.status === "valid"){
+      if(dto.status === "success"){
         
-        showSnackBar("Successfully created a contact")
+        showSnackBar(dto.data.message)
         overlay.close();
         clientCreateNotify();       
   
-      }else{
-        console.log(data)
-        showSnackBar("Error: Unable to create contact")
-  
-        if(typeof data.errors === "object"){
-          showErrors(data.errors)         
-        } 
+      }else{       
+        showSnackBar(dto.data.message)
+        showErrors(dto.data.value) 
       }
     }
 
     function showErrors(errors){
-      $("#contact_creation_errors").empty()
+      if(typeof errors === "object"){
+        $("#contact_creation_errors").empty()
   
-      //show list of errors to client
-      Object.keys(errors).forEach(key => {
+        //show list of errors to client
+        Object.keys(errors).forEach(key => {
           let errorLabel = document.createElement("div");
           errorLabel.textContent = errors[key][0]
           errorLabel.className = "invalid-information"
           $("#contact_creation_errors").append(errorLabel)
-      });
+        });
+      }      
     }
 
     async function show(){
 
-      let response = await sendAjax({method: "POST", 
+      let dto = await sendAjax({method: "POST", 
             params:{customer_id:params.customer_id}     ,             
             url: window.appRoutes.contacts_createForm_path,
             redirect_url: window.appRoutes.root_url})
 
-      if(response && response.value ){
+      if(dto && dto.status === "success" ){
         overlay = overlayFactory({width:"400px"});    
   
-        overlay.append(response.value);  
+        overlay.append(dto.data.value);  
 
              
         //Give a few milliseconds for the DOM to be updated with the form BEFORE
