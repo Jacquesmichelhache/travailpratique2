@@ -14,7 +14,7 @@ class CustomersController < ApplicationController
 
     if current_user != nil then  
       value = current_user.customers.collect{|x| x.attributes}
-      render json: success(value)      
+      render json: success("Successfully retrieved customers",value)      
     else
       render json: fail("no user is logged in") 
     end
@@ -28,7 +28,7 @@ class CustomersController < ApplicationController
     
     begin
       current_user.customers.find(id).destroy     
-      render json: success(nil, "Customer successfully removed")  
+      render json: success("Customer successfully removed",nil)  
     rescue ActiveRecord::RecordNotFound
       render json: fail("Customer not found in database")       
     rescue ActiveRecord::DeleteRestrictionError 
@@ -54,7 +54,7 @@ class CustomersController < ApplicationController
 
       if customer != nil then
         if customer.update(p) then
-          render json: success(customer, "Successfully updated customer")            
+          render json: success("Successfully updated customer", customer)            
         else
           render json: fail("Unable to save changes", customer.errors )       
         end
@@ -75,7 +75,7 @@ class CustomersController < ApplicationController
 
     begin
       htmlString = render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
-      render json: success(htmlString)
+      render json: success("Creation form successfully generated",htmlString)
     
     rescue Exception => e
       render json: fail(e.message)   
@@ -88,7 +88,7 @@ class CustomersController < ApplicationController
     begin
       @cust = current_user.customers.find(params[:id])
       htmlString = render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals:{:@cust => @cust})
-      render json: success(htmlString, "successfully retrieved customer information")
+      render json: success("successfully retrieved customer information", htmlString)
 
     rescue Exception => e
        render json: fail("Error retrieving customer information") 
@@ -113,7 +113,7 @@ class CustomersController < ApplicationController
     if new_customer.valid? then
 
       new_customer.save
-      render json: success(nil, "Successfully created a customer")      
+      render json: success( "Successfully created a customer", nil)      
     else    
       render json: fail("Error creating customer",new_customer.errors)  
     end   

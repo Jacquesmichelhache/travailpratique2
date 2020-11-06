@@ -18,7 +18,7 @@ module ApplicationHelper
     }
   end
 
-  def success(value_in = "",message_in = "")
+  def success(message_in = "", value_in = {})
     return {status:"success",data:{value:value_in,message: message_in}}
   end
 

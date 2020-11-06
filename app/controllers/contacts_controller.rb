@@ -13,7 +13,7 @@ class ContactsController < ApplicationController
     begin
       customer_id = params[:customer_id]
       customer = Customer.find(customer_id)
-      render json: success(customer.contacts, "Successfully retrieves customer contacts") 
+      render json: success("Successfully retrieves customer contacts", customer.contacts) 
     rescue Exception => e
       render json: fail(e.message) 
     end
@@ -31,7 +31,7 @@ class ContactsController < ApplicationController
       htmlString = render_to_string(partial: 'contacts/new_form', :formats => [:html], layout: false, 
                                       locals: {:@new_contact => @new_contact, :@customer => @customer})
 
-      render json: success(htmlString, "Successfully retrieved contact form")        
+      render json: success("Successfully retrieved contact form", htmlString)        
     rescue Exception => e
       render json: fail(e.message)  
     end
@@ -45,7 +45,7 @@ class ContactsController < ApplicationController
       @cont= Contact.find(params[:contact_id])
 
       htmlString = render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
-      render json: success(htmlString, "Successfully retrieved contact information") 
+      render json: success("Successfully retrieved contact information", htmlString) 
      
     rescue Exception => e
       render json: fail(e.message)        
@@ -67,7 +67,7 @@ class ContactsController < ApplicationController
       if new_contact.valid? then
 
         new_contact.save
-        render json: success(nil, "Contact saved")         
+        render json: success("Contact saved", nil)         
       else
         render json: fail("Unable to create contact",new_contact.errors)          
       end
@@ -87,7 +87,7 @@ class ContactsController < ApplicationController
 
       if contact != nil then
         if contact.update(p) then
-          render json: success(contact, "Contact saved") 
+          render json: success("Contact saved", contact) 
         else
           render json: fail("Unable to create contact", contact.errors)
         end
@@ -107,7 +107,7 @@ class ContactsController < ApplicationController
       Contact.find(params[:contact_id] ).destroy 
 
       customer =  Customer.find(params[:customer_id] )
-      render json: success(customer.contacts.collect{|x| x.attributes}, "Contact successfully removed") 
+      render json: success("Contact successfully removed", customer.contacts.collect{|x| x.attributes}) 
      
     rescue ActiveRecord::RecordNotFound
       render json: fail("Contact not found in database")  
