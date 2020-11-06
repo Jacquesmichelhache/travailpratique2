@@ -1,16 +1,19 @@
-//this is a overlay utility component
 
+//Jacques 06-11-2020
+//this component allows the creation of windows with a darkly shaded see-through background
 export let overlayFactory = function (userOptions = {}) {
 
-    let options = {
-        removeWhenClosed: true, //clear dom elements if true
-        clickBackgroundToClose:true,     
-        stopPropagation:false, //should be false, if not, some componenets inside panel may not work properly
-        width:"100%",
-        maxWidth:"",
-        minWidth:"200px"
-    }
-    options = { ...JSON.parse(JSON.stringify(options)), ...userOptions}
+  let options = {
+      //removes the overlay from the DOM. 
+      //choose false if you want content state to persist through reopening of the overlay
+      removeWhenClosed: true, 
+      clickBackgroundToClose:true,     
+      stopPropagation:false, //control whether events inside the overlay should bubble up to the document.body
+      width:"100%",
+      maxWidth:"",
+      minWidth:"200px"
+  }
+  options = { ...JSON.parse(JSON.stringify(options)), ...userOptions}
 
   let overlay = document.createElement("div");
   let bootstrapRow = document.createElement("div");
@@ -45,8 +48,8 @@ export let overlayFactory = function (userOptions = {}) {
               });
           }            
       } else {
-          //if event originated from a child element of panel, let it go through without closing overlay
-          //this is important for bootstrap components to work properly
+          //if event originated from a child element of flexPanel, let it go through without closing overlay
+          //this is important for bootstrap components to work properly inside the flexPanel
       }              
   });
   overlay.addEventListener("click", (e) => {
@@ -62,7 +65,7 @@ export let overlayFactory = function (userOptions = {}) {
   overlay.appendChild(bootstrapRow);
   document.body.appendChild(overlay)
 
-  //methods
+  //API methods
   function append(el){
     if(el instanceof HTMLElement){
         flexPanel.appendChild(el)
@@ -83,6 +86,7 @@ export let overlayFactory = function (userOptions = {}) {
 
 
   //public facing API
+  //note: Clients append content to the flexPanel Element
   let returnObject =
   {
       domElement: overlay,

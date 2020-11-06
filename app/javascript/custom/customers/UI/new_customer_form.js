@@ -1,28 +1,26 @@
-import {get_new_customer_form} from '../ajax/get_new_customer_form';
-import {overlayFactory} from '../../utility/overlay';
-import {showSnackBar} from '../../utility/snackbar'
+//Jacques 06-11-2020
 
-//Basic structure template
+import {datepicker} from 'jquery-ui/ui/widgets/datepicker'; 
+import {overlayFactory} from '../../utility/overlay';
+import {showSnackBar} from '../../utility/snackbar';
+import {setDatePicker} from '../../utility/dates_management'
+import {sendAjax} from '../../ajax/ajax_calls'
+
 export let customerFormFactory = (function(){
   //context static  
 
   return function(){
     //private context
-    let overlay = null;
-    let successObservers = []
 
-    function setDatePicker(){  
-      $(".datepicker").datepicker({
-        locale: "en",
-        sideBySIde: true,
-        dateFormat: 'dd-m-yy'     
-      });
-    }
-    
+    let overlay = null;
+    let successObservers = [] //calls observers upon successful customer creation
+      
+    //Because the form is send via AJAX, we listen to rails' ajax success response
     function setCreateButton(){   
       $("#create_customer_form").on('ajax:success', createCustomerResponse)      
     }
 
+    //called upon rails' successfull custumer creation
     function createCustomerResponse(event){
       console.log("ajax response")
       const [data, status, xhr] = event.detail   
@@ -55,37 +53,43 @@ export let customerFormFactory = (function(){
       });
     }
 
-    async function show(){
-      let response = await get_new_customer_form(window.appRoutes.customers_creation_form_path, window.appRoutes.root_url)
 
-      if(response && response.customerView ){
-        overlay = overlayFactory({maxWidth:"500px"});
-       // document.body.appendChild(overlay.domElement)
+    async function show(){  
 
-        overlay.append(response.customerView);
+      let response = await sendAjax({method: "POST",                   
+            url: window.appRoutes.customers_creation_form_path,
+            redirect_url: window.appRoutes.root_url})
 
-        //init datepicker
+      if(response && response.htmlString ){
+        overlay = overlayFactory({maxWidth:"500px"});  
+        overlay.append(response.htmlString);
+
+        //init datepicker        
+        //Give a few milliseconds for the DOM to be updated with the form BEFORE
+        //executing the setters 
         setTimeout(()=>{
-          setDatePicker();
-          setCreateButton();
+          setDatePicker(".datepicker"); //to format dates
+          setCreateButton(); //to hook event listeners to the submit button
         },100)      
 
         overlay.show();
       }       
     }
 
+    //Observer management
     function registerToClientCreateEvent(obs){
       successObservers.push(obs);
     }
     function clientCreateNotify(){
       successObservers.forEach((obs)=>{
         try{
-          obs().bind(obs);
+          obs.apply(obs); 
         }catch(e){
 
         }
       })
     }
+
 
     //public context (api)
     return  {

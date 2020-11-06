@@ -1,4 +1,6 @@
-window.controlsCellRenderer = function(deleteCallback, editCallback){
+//Jacques 06-11-2020
+//refer to ag-grid API documentation
+export function editRowComponent(deleteCallback, editCallback){
 
   return function(params){
     let wrap = document.createElement("div");
@@ -26,21 +28,7 @@ window.controlsCellRenderer = function(deleteCallback, editCallback){
         deleteCallback(params)
       }catch(e){
         console.log(e.message)
-      }
-
-      // let result = await yesNoDialog();
-
-      // if(result === "yes"){
-
-      //   //delete item                
-      //   let response = await deleteCustomer(params.data.id,"<%= customers_delete_url %>",'<%= root_url%>')
-
-      //   if(response.operation_status === "success"){          
-      //     location.reload()
-      //   }else{
-      //     showSnackBar(response.operation_status + ": "+response.error_message)
-      //   }
-      // }      
+      }         
     });
 
     editButton.addEventListener("click",(e)=>{
@@ -48,8 +36,7 @@ window.controlsCellRenderer = function(deleteCallback, editCallback){
         editCallback(params)
       }catch(e){
         console.log(e.message)
-      }
-      //show_edit_panel(params.data.id);    
+      }      
     });
 
 

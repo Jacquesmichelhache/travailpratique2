@@ -1,5 +1,9 @@
-//Basic structure template
+//Jacques 06-11-2020
 export let tabElementFactory = (function(){
+  //Consumers of this component must create an instance of the tabElement by calling the factory 
+  //Use the API of the tabElement to create tab components. 
+  //Append tab content through the tab API
+  
   //context static  
   let id = 1;
   function getId(){return id++}
@@ -15,10 +19,16 @@ export let tabElementFactory = (function(){
       navTabsCtn:null,
       tabContentCtn:null,
     }
-    let isFirstTab = true;
+
+    //to show the first tab on first draw of this component, special css is applied
+    let isFirstTab = true; 
   
+    //default wrap element
+    layout.wrap = document.createElement("div")
+    layout.wrap.textContent = "If this is visible, init has failed"
 
     function createLayout(){
+      //This layout structure follows from the bootstrap 4 tab examples
       let wrap = document.createElement("div")
       let navTabsCtn = document.createElement("ul")
       let tabContentCtn = document.createElement("div")
@@ -42,19 +52,24 @@ export let tabElementFactory = (function(){
       layout.wrap = wrap;
     }
 
+
     function createTab(userParams={}){
       let defaultParams = {
         text:"tab"
-      }
-      let clickCallBacks = [];
+      }      
       let params = {...defaultParams,...userParams}
 
+      //Consumers can add tab click callbacks event through the tab API
+      let clickCallBacks = [];
+
+      //id is generated from the static context to ensure uniqueness between tabComponents
+      let id = "TabComponent-" + getId().toString()
+     
       let li = document.createElement("li");
       let link = document.createElement("a");
       let contentTab = document.createElement("div");
 
-      let id = "Customer-Information-tab-" + getId().toString()
-
+      //styling   
       li.className = "nav-item"
 
       link.className = isFirstTab? "nav-link active": "nav-link"
@@ -68,11 +83,13 @@ export let tabElementFactory = (function(){
       contentTab.id = id
       contentTab.setAttribute("role","tabpanel");
      
-      li.appendChild(link);
 
+      //appending
+      li.appendChild(link);
       layout.navTabsCtn.appendChild(li)
       layout.tabContentCtn.appendChild(contentTab)
 
+      //API Methods
       function append(el){
         if(typeof el === "string") $(contentTab).html(el)
         else if(el instanceof HTMLElement){
@@ -90,10 +107,14 @@ export let tabElementFactory = (function(){
         })
       }
 
-      isFirstTab = false
+      //first tab has special css when isFirstTab is TRUE. 
+      //so we turn this off following the creation of a tab
+      isFirstTab = false 
+
+      //return a tab API to the client
       return {
-        append,
-        addClickCallBack
+        append, //used to add tab content
+        addClickCallBack //add callback for when user clicks on the tab header
        }      
     }
 
@@ -103,7 +124,7 @@ export let tabElementFactory = (function(){
     //public context (api)
     return  {
       createTab:createTab,
-      getWrap:()=>{return layout.wrap}
+      getWrap:()=>{return layout.wrap} //get the wrap html element of the component
     }
   }
 })()

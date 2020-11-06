@@ -1,3 +1,5 @@
+//Jacques 06-11-2020
+//This is a non blocking (async) user prompt
 export function yesNoDialog(clientParams= {}){
 
   let defaultParams = {
@@ -8,6 +10,8 @@ export function yesNoDialog(clientParams= {}){
 
   let params = {...defaultParams,...clientParams};
 
+
+  //the yesNoDialog waits, in a non-blocking way for a YES or NO response 
   return new Promise((resolve,reject)=>{
     let overlay = document.createElement("div");
     let title = document.createElement("h2");
@@ -25,23 +29,23 @@ export function yesNoDialog(clientParams= {}){
     overlay.className = "overlay d-flex flex-column align-items-center"
     overlay.style.display = "none";
     
-    dialogContainer.className = "yesNo-dialog-container d-flex flex-column align-items-center"
+    dialogContainer.className = "yesno-dialog-container d-flex flex-column align-items-center"
     dialogContainer.style.padding = "20px";
     dialogContainer.style.marginTop = "30px";
 
-    yesButton.className = "btn btn-md btn-dark yesNo-btn-lg"
+    yesButton.className = "btn btn-md btn-dark yesno-btn-lg"
     yesButton.textContent = params.affirmText;
 
-    noButton.className = "btn btn-md btn-dark yesNo-btn-lg"
+    noButton.className = "btn btn-md btn-dark yesno-btn-lg"
     noButton.textContent = params.denyText;
 
     //events
     yesButton.addEventListener("click",()=>{
-      $(overlay).remove(); //clean up
+      $(overlay).remove(); //cleaning up DOM
       resolve("yes")    
     });
     noButton.addEventListener("click",()=>{
-      $(overlay).remove(); //clean up
+      $(overlay).remove(); //cleaning up DOM
       resolve("no")        
     });
 
@@ -57,7 +61,7 @@ export function yesNoDialog(clientParams= {}){
 
     document.body.appendChild(overlay)
 
-    //show
+    //show the yesNoDialog to the user
     $(overlay).fadeIn(250);
     
   });

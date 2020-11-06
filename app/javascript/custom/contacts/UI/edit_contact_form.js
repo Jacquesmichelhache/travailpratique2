@@ -1,6 +1,8 @@
+//Jacques 06-11-2020
+
 import {overlayFactory} from '../../utility/overlay';
-import {get_edit_contact_form} from '../ajax/get_edit_form'
 import {showSnackBar} from '../../utility/snackbar'
+import {sendAjax} from '../../ajax/ajax_calls'
 
 export let editContactFormFactory = (function(){
   //context static  
@@ -15,19 +17,17 @@ export let editContactFormFactory = (function(){
       onContactChange:null      
     }
 
-    let params = {...defaultParams,...userParams}
+    let params = {...defaultParams,...userParams} 
 
-    let layout = {
 
-    }   
-   
-
+     //Because the form is send via AJAX, we listen to rails' ajax success response
     function setUpdateButton(){   
       $("#update_contact_form").on('ajax:success', updateContactResponse)      
     }
 
-    function updateContactResponse(event){
-      console.log("ajax response")
+
+    //called upon rails' successfull custumer creation
+    function updateContactResponse(event){    
       const [data, status, xhr] = event.detail   
   
       if(data.status === "valid"){
@@ -64,28 +64,30 @@ export let editContactFormFactory = (function(){
 
     async function createLayout(){  
 
-      let response = await get_edit_contact_form(params.contact_id, window.appRoutes.contacts_editform_path, window.appRoutes.root_url)
+      let response = await sendAjax({method: "POST", 
+            params:{contact_id:params.contact_id},             
+            url: window.appRoutes.contacts_editform_path,
+            redirect_url: window.appRoutes.root_url})
 
       if(response && response.htmlString ){
         overlay = overlayFactory({width:"400px"});     
 
         overlay.append(response.htmlString);
 
-        //init datepicker
+        //Give a few milliseconds for the DOM to be updated with the form BEFORE
+        //executing the setters 
         setTimeout(()=>{         
           setUpdateButton();
         },100)      
 
         overlay.show();
       }   
-    }  
+    } 
 
 
     async function show(){
       await createLayout();
-
     }
-
 
     function registerToChangeEvent(obs){
       changeObservers.push(obs);
@@ -98,8 +100,7 @@ export let editContactFormFactory = (function(){
 
         }
       })
-    }
-   
+    }   
 
     //public context (api)
     return  {

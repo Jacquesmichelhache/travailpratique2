@@ -14,20 +14,6 @@ global.agGrid = require('ag-grid-community')
 require("popper.js")
 require("bootstrap")
 
-//utility
-require("../custom/aggrid_helpers/edit_column_aggrid")
-
-//customers ajax
-// require("../custom/customers/ajax/delete_customer")
-// require("../custom/customers/ajax/get_customer_info")
-
-//contacts ajax
-// require("../custom/contacts/delete_contact")
-// require("../custom/contacts/create_contact")
-// require("../custom/contacts/new_contact")
-// require("../custom/contacts/update_contact")
-// require("../custom/contacts/all_contacts")
-
 let jQuery = require("jquery");
 
 require('webpack-jquery-ui');

@@ -12,18 +12,21 @@
 }
 
 
-
 #customer_grid > div {
   border:none
 }
 
-.yesNo-dialog-container{
+.yesno-dialog-container{
   width:350px;
   height:auto;
   border:5px solid black;
   background-color: white;  
 }
 
-.yesNo-btn-lg {
+.yesno-btn-lg {
   width:100px;
+}
+
+.filter-input {
+  width:150px !important;
 }

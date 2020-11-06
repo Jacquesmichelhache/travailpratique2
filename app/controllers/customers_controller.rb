@@ -2,13 +2,10 @@ class CustomersController < ApplicationController
   before_action :authenticate_user!
   
   #GET
-  def show   
-   
-   
-      
+  def show 
   end
 
-  #POST
+
 
   #POST
   def all
@@ -21,27 +18,7 @@ class CustomersController < ApplicationController
         error_message: "no user is logged in"}  
     end
 
-  end
-
-  #POST
-  def edit
-    id = params[:id]  
-    
-    begin
-      @cust = current_user.customers.find(id)
-    
-      render  json: {operation_status:"success", 
-        customerView: render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals: {:@cust => @cust}),
-        contactView: render_to_string(partial: 'contacts/page',:formats => [:html], layout: false, locals: {:@cust => @cust}),
-        customerName: @cust.name
-      }
-    
-      #render  json:{operation_status:"success", value: cust.to_json}  
-    rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
-    end
-
-  end
+  end  
 
   #DELETE
   def destroy
@@ -50,17 +27,17 @@ class CustomersController < ApplicationController
     
     begin
       current_user.customers.find(id).destroy        
-      render  json:{operation_status:"success", error_message:"Customer successfully removed"}    
+      render  json:{operation_status:"success", error_message:"customer successfully removed"}    
 
     rescue ActiveRecord::RecordNotFound
-      render  json:{ operation_status:"error", error_message:"Customer not found in database"}
+      render  json:{ operation_status:"error", error_message:"customer not found in database"}
     rescue ActiveRecord::DeleteRestrictionError 
       #An assumption is made here that the customer has contacts
-      render  json:{ operation_status:"error", error_message:"Cannot remove a customer with contacts"}
+      render  json:{ operation_status:"error", error_message:"cannot remove a customer with contacts"}
     rescue ActiveRecord::RecordNotDestroyed
-      render  json:{ operation_status:"error", error_message:"Cannot delete a customer that has contacts!"}  
+      render  json:{ operation_status:"error", error_message:"cannot delete a customer that has contacts!"}  
     rescue
-
+      render  json:{ operation_status:"error", error_message:"unable to delete customer. Contact administrator"}  
     end
 
   end
@@ -102,7 +79,7 @@ class CustomersController < ApplicationController
 
     begin
     render  json: {operation_status:"success", 
-      customerView: render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
+      htmlString: render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
     }
     rescue Exception => e
       render  json:{operation_status:"error", error_message: e.message}  
@@ -130,7 +107,6 @@ class CustomersController < ApplicationController
     p = customer_params
 
     #validate the model before commiting the changes
-
     begin
       p[:relationshipstart] = DateTime.strptime(p[:relationshipstart], "%m/%d/%Y")  
     rescue

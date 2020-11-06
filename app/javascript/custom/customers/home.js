@@ -1,19 +1,21 @@
-import {datepicker} from 'jquery-ui/ui/widgets/datepicker';
-import {getCustomers} from './ajax/get_all_customers';
+//Jacques 06-11-2020
+
+//datepicker must be imported first.
+import {datepicker} from 'jquery-ui/ui/widgets/datepicker'; 
+
+
 import {yesNoDialog} from '../utility/yesNoDialog';
 import {control_bar_v1} from '../utility/control_bar_v1';
-
 import {customerFormFactory} from './UI/new_customer_form';
 import {customerInformationFactory} from './UI/customer_information';
-import {deleteCustomer} from './ajax/delete_customer';
 import {showSnackBar} from '../utility/snackbar'
-
-//import {editCustomers} from 
+import {sendAjax} from '../ajax/ajax_calls'
+import {editRowComponent} from '../aggrid_helpers/edit_row_component'
 
 
 //Basic structure template
 export let objectClass = (function(){
-  //context static  
+  //static context 
 
   return function(){
     //private context
@@ -22,82 +24,80 @@ export let objectClass = (function(){
     //public context (api)
     return  {
 
-
     }
   }
 })()
 
 
-export let homeFactory = (function homeAPI(){
+
+//the homeFactory creates instances of the home page 
+export let customersHomeFactory = (function homeAPI(){
   //static context
+
+  //the root_id must reference an HTML element in the customer VIEW
   let root_id = "customer_app"
-  let rootElement;
+  let rootElement = null;
 
 
   return function(){
-    //private context (user context)
+    //private context 
+
     let customersTable = null;
     let customersTableOptions = null;
     let costumer_id = -1; 
     let controlBar = null 
 
+    //called by the ag-grid custom component
     let deleteButtonCallback = async (params)=>{
-      //params is an agGrid object
+      //params is an agGrid object of interface ICellRendererParams. see more at:
+      //https://www.ag-grid.com/javascript-grid-cell-rendering-components/
+
       let result = await yesNoDialog();
 
       if(result === "yes"){
 
         //delete item                
-        let response = await deleteCustomer(params.data.id, 
-                                            window.appRoutes.customers_delete_path,
-                                            window.appRoutes.root_url)
+        let response = await sendAjax({method: "DELETE",
+            params: {id:params.data.id},            
+            url: window.appRoutes.customers_delete_path,
+            redirect_url: window.appRoutes.root_url})
 
         if(response == null){
           showSnackBar("Error: could not delete customer")
-        }else if(response.operation_status === "success"){   
+        }else if(response.operation_status === "success"){ 
+          showSnackBar("Customer deleted!")  
           await refreshCustomersTable()
         }else{
           showSnackBar(response.operation_status + ": "+response.error_message)
         }
-
       } 
     }
 
+    //called by the ag-grid custom component
     let editButtonCallBack = (params) =>{
+      //params is an agGrid object of interface ICellRendererParams. see more at:
+      //https://www.ag-grid.com/javascript-grid-cell-rendering-components/
+
       let form = customerInformationFactory({customer_id: params.data.id,
           onCustomerChange:()=>{
             form.close();
             refreshCustomersTable();
             }
         })
-
+        
       form.show();     
-    }
+    }    
 
-    function newCustomer(){
-      let form = customerFormFactory();
-      form.registerToClientCreateEvent(refreshCustomersTable)
-      form.show();
-    } 
-
+    //used by the ag-Grid table API to format dates correctly
+    //Dates are stored as UTC and shown as UTC
     function dateFormatter(params){
       let dateAsString = params.data.relationshipstart   
-      let dateAsObject = new Date(Date.parse(dateAsString));    
+      let dateAsObject = new Date(Date.parse(dateAsString)); 
+
       return dateAsObject.getUTCDate() + "/" + (dateAsObject.getUTCMonth() + 1) + "/" + dateAsObject.getUTCFullYear();
-    } 
-    
-    async function refreshCustomersTable(){
-      let customers = await getCustomers(window.appRoutes.customers_all_path,window.appRoutes.root_url)
-      setCustomersTable(JSON.parse(customers.value))
-    }
-    function setCustomersTable(rowData){
-      //rowData must be of object type, not string!!!
+    }  
 
-      if(customersTable){
-        customersTable.gridOptions.api.setRowData(rowData)
-      }
-    }
-
+    //used by ag-grid to sort and filter dates
     function dateComparator(date1, date2) {
       let dateObject1 = new Date(date1);
       let dateObject2 = new Date(date2);   
@@ -106,6 +106,7 @@ export let homeFactory = (function homeAPI(){
     }
 
 
+    //used by ag-grid to defined default column configuration
     let defaultColDef = {
       cellStyle: {"line-height":"60px","font-size":"16px"},
       filter: true,
@@ -113,7 +114,7 @@ export let homeFactory = (function homeAPI(){
       resizable : true
     }
 
-
+    //used by ag-grid to defined specific column configuration
     let customers_column_definitions = [
       {headerName : "Name", field : "name"   },
       {headerName : "Start Date", field : "relationshipstart", valueFormatter:dateFormatter,comparator:dateComparator},
@@ -122,21 +123,17 @@ export let homeFactory = (function homeAPI(){
       {headerName:"", width:120, cellRenderer:"ControlsCellRenderer", pinned: "left",resizable:false,filter:false,sortable:false,flex:2}]
 
 
-    function filterTable(filterValue){
-      customersTable.gridOptions.api.setQuickFilter(filterValue)
-    }
-
-    
-
     async function initCustomersTable(){
-      let customers = await getCustomers(window.appRoutes.customers_all_path,window.appRoutes.root_url)
-       //agGrid table setup
+
+      let customers = await getCustomers(); 
+
+      //agGrid table setup. see ag-grid documentation for more information
       customersTableOptions = {
           defaultColDef:defaultColDef,
           columnDefs: customers_column_definitions,    
           domLayout:"autoHeight",
           components:{
-            ControlsCellRenderer:window.controlsCellRenderer(deleteButtonCallback,editButtonCallBack)
+            ControlsCellRenderer:editRowComponent(deleteButtonCallback,editButtonCallBack)
           },
           rowData:JSON.parse(customers.value),
           onRowDataChanged:function(event){
@@ -148,21 +145,23 @@ export let homeFactory = (function homeAPI(){
       };
     }
 
+    //the actual creation of the table and insertion into the DOM
     async function buildCustomersTable(){     
       let tableContainer = document.createElement("div");
 
       tableContainer.className = "ag-theme-alpine"
       tableContainer.style.cssText = "width:auto;border:none;margin-top:20px"
       
-      customersTable  = new agGrid.Grid(tableContainer, customersTableOptions);
-
-      rootElement.appendChild(tableContainer)
+    
+        customersTable  = new agGrid.Grid(tableContainer, customersTableOptions);
+        
+        rootElement.appendChild(tableContainer) 
     }
 
     async function initControlBar(){
       controlBar = control_bar_v1({newText:"New Customer"});
       controlBar.registerToFilterChangeEvent(filterTable)
-      controlBar.registerToNewEvent(newCustomer)
+      controlBar.registerToNewEvent(showCustomerCreationForm)
       controlBar.init(); 
     }  
     async function builtControlBar(){
@@ -175,9 +174,44 @@ export let homeFactory = (function homeAPI(){
     }
 
     async function init(){
+      //get the root element from the main VIEW
       rootElement = document.getElementById(root_id);
       await initControlBar()
       await initCustomersTable();     
+    }
+
+    //helper method
+    function filterTable(filterValue){
+      customersTable.gridOptions.api.setQuickFilter(filterValue)
+    }
+
+     //helper method
+     function showCustomerCreationForm(){
+      let form = customerFormFactory();
+      form.registerToClientCreateEvent(refreshCustomersTable)
+      form.show();
+    } 
+
+    async function getCustomers(){
+      return await sendAjax({method: "POST",
+      url: window.appRoutes.customers_all_path, 
+      redirect_url: window.appRoutes.root_url})
+    }
+
+    //helper method
+    async function refreshCustomersTable(){
+      let customers = await getCustomers();    
+      setCustomersTable(JSON.parse(customers.value))
+    }
+
+     //helper method
+    function setCustomersTable(rowData){
+      //rowData must be of object type, not string!!!
+      //value must be an array of hashes:  [{..},{..}]
+
+      if(customersTable){
+        customersTable.gridOptions.api.setRowData(rowData)
+      }
     }
 
     //public facing API

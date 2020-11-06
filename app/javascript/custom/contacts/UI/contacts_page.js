@@ -1,17 +1,15 @@
+//Jacques 06-11-2020
 
 import {contactFormFactory} from './new_contact_form'
 import {editContactFormFactory} from './edit_contact_form'
-import {getCustomerContacts} from '../ajax/get_customer_contacts'
 import {control_bar_v1} from '../../utility/control_bar_v1';
 import {yesNoDialog} from '../../utility/yesNoDialog';
-import {deleteContact} from '../ajax/delete_contact';
 import {showSnackBar} from '../../utility/snackbar'
-
-
+import {sendAjax} from '../../ajax/ajax_calls'
+import {editRowComponent} from '../../aggrid_helpers/edit_row_component'
 
 export let contactsPageFactory = (function(){
   //context static 
-
 
 
   return function(userParams={}){
@@ -23,25 +21,27 @@ export let contactsPageFactory = (function(){
 
     let contactsTable = null
     let contactGridOptions = null;
-    let controlBar = null;
+    let controlBar = null;  
 
-    //let updateObservers = [];
-
-
+     //called by the ag-grid custom component
     let deleteButtonCallback = async (tableRow)=>{
-      //params is an agGrid object
+      //tableRow is an agGrid object of interface ICellRendererParams. see more at:
+      //https://www.ag-grid.com/javascript-grid-cell-rendering-components/
+     
       let result = await yesNoDialog();
 
       if(result === "yes"){
 
-        //delete item                
-        let response = await deleteContact(params.customer_id, tableRow.data.id,                                         
-                                          window.appRoutes.contacts_delete_path,
-                                          window.appRoutes.root_url)
+        //delete item   
+        let response = await sendAjax({method: "DELETE", 
+            params:{customer_id:params.customer_id, contact_id: tableRow.data.id },             
+            url: window.appRoutes.contacts_delete_path,
+            redirect_url: window.appRoutes.root_url})
 
         if(response == null){
           showSnackBar("Error: could not delete contact")
         }else if(response.operation_status === "success"){   
+          showSnackBar("Contact deleted!")
           await refreshContactsTable()
         }else{
           showSnackBar(response.operation_status + ": "+response.error_message)
@@ -50,7 +50,11 @@ export let contactsPageFactory = (function(){
       } 
     }
 
+     //called by the ag-grid custom component
     let editButtonCallBack = (tableRow) =>{
+      //tableRow is an agGrid object of interface ICellRendererParams. see more at:
+      //https://www.ag-grid.com/javascript-grid-cell-rendering-components/
+
       let form = editContactFormFactory({
         contact_id: tableRow.data.id,
         onContactChange:()=>{
@@ -62,8 +66,7 @@ export let contactsPageFactory = (function(){
       form.show();     
     }
 
-
-
+    //used by ag-grid to defined default column configuration
     let defaultContactColDef = {
 
       cellStyle: {"line-height":"60px","font-size":"16px"},
@@ -72,6 +75,7 @@ export let contactsPageFactory = (function(){
       resizable : true,    
     }
 
+    //used by ag-grid to defined specific column configuration
     let contact_column_definitions = [
       {headerName : "Name", field : "name" },
       {headerName : "First name", field : "firstname"},
@@ -80,20 +84,20 @@ export let contactsPageFactory = (function(){
       {headerName : "Email", field : "email"},
       {headerName:"", width:120, cellRenderer:"ControlsCellRenderer", pinned: "left",resizable:false,filter:false,sortable:false,flex:2}]   
 
-    async function initContactsTable(){
-      let contacts = await getCustomerContacts(params.customer_id,
-          window.appRoutes.contacts_customer_contacts_path,
-          window.appRoutes.root_url)
 
-        //agGrid table setup
+    async function initContactsTable(){
+
+        let response = await getCustomerContacts(params.customer_id)
+
+        //agGrid table setup. see ag-grid documentation for more information
         contactGridOptions = {
           defaultColDef:defaultContactColDef,
           columnDefs: contact_column_definitions,    
           domLayout:"autoHeight",
           components:{
-            ControlsCellRenderer:window.controlsCellRenderer(deleteButtonCallback,editButtonCallBack)
+            ControlsCellRenderer:editRowComponent(deleteButtonCallback,editButtonCallBack)
           },
-          rowData: contacts && contacts.value? JSON.parse(contacts.value):null,
+          rowData: response && response.value? JSON.parse(response.value):null,
           onRowDataChanged:function(event){
             autoSizeColumn();
           },
@@ -111,12 +115,17 @@ export let contactsPageFactory = (function(){
       contactsTable.gridOptions.api.setQuickFilter(filterValue)
     }
 
-    async function refreshContactsTable(){
-      let contacts = await getCustomerContacts(params.customer_id, 
-        window.appRoutes.contacts_customer_contacts_path,
-        window.appRoutes.root_url)
+    async function getCustomerContacts(customer_id){
+      return await sendAjax({method: "POST", 
+          params:{customer_id:customer_id},             
+          url: window.appRoutes.contacts_customer_contacts_path,
+          redirect_url: window.appRoutes.root_url})
+    }
 
-      setContactsTable(JSON.parse(contacts.value))
+    async function refreshContactsTable(){
+      let response = await getCustomerContacts(params.customer_id)
+         
+      setContactsTable(JSON.parse(response.value))
     }
 
     function setContactsTable(rowData){
@@ -144,8 +153,7 @@ export let contactsPageFactory = (function(){
     }
 
 
-    function createLayout(){   
-      //layout  
+    function createLayout(){       
       layout.wrap = document.createElement("div")
       layout.wrap.className = "d-flex flex-column align-items-center"
       layout.wrap.style.width = "100%"
@@ -176,9 +184,7 @@ export let contactsPageFactory = (function(){
    
       await initControlBar()
       await initContactsTable();  
-    }   
-    
-
+    }  
 
     //public context (api)
     return  {

@@ -6,27 +6,28 @@ Rails.application.routes.draw do
           registrations:'users/registrations',
           passwords:'users/passwords'}    
 
-  get '/logout', to: 'static_pages#logout'  
-  get '/password_reset', to: 'static_pages#password_reset'
+  get '/logout', to: 'static_pages#logout' #view 
+  get '/password_reset', to: 'static_pages#password_reset' #view
   
 
   #Customers
-  get '/customers', to: 'customers#show' #returns a view with all the customers
-  post '/customers', to: 'customers#create'
-  delete '/customers/delete', to: 'customers#destroy'
-  post '/customers/edit', to: 'customers#edit'
-  post '/customers/update' , to: 'customers#update'
-  post '/customers/all', to: 'customers#all' #ajax for retrieving all customers from user
-  post '/customers/creationform', to: 'customers#creationform'
-  post '/customers/editform', to: 'customers#editform'
+  get '/customers', to: 'customers#show' #view
+  post '/customers', to: 'customers#create' #ajax 
+  delete '/customers/delete', to: 'customers#destroy' #ajax 
+  post '/customers/update' , to: 'customers#update' #ajax 
+  post '/customers/all', to: 'customers#all' #ajax 
+  post '/customers/creationform', to: 'customers#creationform' #ajax 
+  post '/customers/editform', to: 'customers#editform' #ajax 
  
   #Contacts
-  delete '/contacts/delete', to: 'contacts#destroy'
-  post   '/contacts/new', to: 'contacts#new'
-  post '/contacts/create', to: 'contacts#create'
-  post '/contacts/customer_contacts', to: 'contacts#customer_contacts'
-  post '/contacts/update', to: 'contacts#update'
-  post '/contacts/editform', to: 'contacts#editform'
+  delete '/contacts/delete', to: 'contacts#destroy' #ajax   
+  post '/contacts/create', to: 'contacts#create' #ajax 
+  post '/contacts/customer_contacts', to: 'contacts#customer_contacts' #ajax 
+  post '/contacts/update', to: 'contacts#update' #ajax 
+  post '/contacts/editform', to: 'contacts#editform' #ajax 
+  post   '/contacts/createForm', to: 'contacts#createForm' #ajax 
+
+  
 
   
 end

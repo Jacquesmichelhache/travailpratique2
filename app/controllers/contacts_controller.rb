@@ -20,7 +20,7 @@ class ContactsController < ApplicationController
   end
 
   #POST 
-  def new   
+  def createForm   
 
     begin
      
@@ -35,6 +35,21 @@ class ContactsController < ApplicationController
           locals: {:@new_contact => @new_contact, :@customer => @customer}),        
       }    
      
+    rescue Exception => e
+      render  json:{operation_status:"error", error_message: e.message}  
+    end
+
+  end
+
+  #POST
+  def editform   
+
+    begin
+      @cont= Contact.find(params[:contact_id])
+
+      render  json: {operation_status:"success", 
+        htmlString: render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
+      }
     rescue Exception => e
       render  json:{operation_status:"error", error_message: e.message}  
     end
@@ -68,22 +83,6 @@ class ContactsController < ApplicationController
     rescue Exception => e
       render  json:{operation_status:"error", error_message: e.message,customer_id:customer_id, customer:customer, p:p }  
     end
-  end
-
-
-  #POST
-  def editform   
-
-    begin
-      @cont= Contact.find(params[:contact_id])
-
-      render  json: {operation_status:"success", 
-        htmlString: render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
-      }
-    rescue Exception => e
-      render  json:{operation_status:"error", error_message: e.message}  
-    end
-
   end
 
   #POST
@@ -138,6 +137,8 @@ class ContactsController < ApplicationController
     end
 
   end
+
+
 
   private
     def contact_params

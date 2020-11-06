@@ -1,8 +1,9 @@
-import {getNewContactForm} from '../../contacts/ajax/new_contact';
+//Jacques 06-11-2020
+
 import {overlayFactory} from '../../utility/overlay';
 import {showSnackBar} from '../../utility/snackbar'
+import {sendAjax} from '../../ajax/ajax_calls'
 
-//Basic structure template
 export let contactFormFactory = (function(){
   //context static  
 
@@ -12,22 +13,17 @@ export let contactFormFactory = (function(){
     let params = {...defaultParams,...userParams}
 
     let overlay = null;
-    let successObservers = []
-
-    function setDatePicker(){  
-      $(".datepicker").datepicker({
-        locale: "en",
-        sideBySIde: true,
-        dateFormat: 'dd-m-yy'     
-      });
-    }
+    let successObservers = [] 
     
+
+    //Because the form is send via AJAX, we listen to rails' ajax success response
     function setCreateButton(){   
       $("#create_contact_form").on('ajax:success', createContactResponse)      
     }
 
-    function createContactResponse(event){
-      console.log("ajax response")
+
+    //called upon rails' successfull custumer creation
+    function createContactResponse(event){    
       const [data, status, xhr] = event.detail   
   
       if(data.status === "valid"){
@@ -59,23 +55,28 @@ export let contactFormFactory = (function(){
     }
 
     async function show(){
-      let response = await getNewContactForm(params.customer_id, window.appRoutes.contacts_new_path, window.appRoutes.root_url)
 
+      let response = await sendAjax({method: "POST", 
+            params:{customer_id:params.customer_id}     ,             
+            url: window.appRoutes.contacts_createForm_path,
+            redirect_url: window.appRoutes.root_url})
 
       if(response && response.value ){
-        overlay = overlayFactory({width:"400px"});
-       // document.body.appendChild(overlay.domElement)
+        overlay = overlayFactory({width:"400px"});    
   
-        overlay.append(response.value);
-  
-         //init datepicker
-         setTimeout(()=>{
-          setDatePicker();
+        overlay.append(response.value);  
+
+             
+        //Give a few milliseconds for the DOM to be updated with the form BEFORE
+        //executing the setters       
+        setTimeout(()=>{        
           setCreateButton();
-         },100)      
+        },100)      
   
         overlay.show();
-      } 
+      } else{
+        showSnackBar("unable to load contact form from server")
+      }
     }
 
     function registerToClientCreateEvent(obs){
@@ -86,7 +87,7 @@ export let contactFormFactory = (function(){
         try{
           obs();
         }catch(e){
-
+          console.log(e.message)
         }
       })
     }

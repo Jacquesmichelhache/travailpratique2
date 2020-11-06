@@ -48,8 +48,7 @@ class ApplicationController < ActionController::Base
     def set_route_information
       @routes =  {
         :root_url => root_url,
-        :customers_delete_path => customers_delete_path,
-        :customers_edit_url => customers_edit_url,
+        :customers_delete_path => customers_delete_path,    
         :customers_all_path => customers_all_path,
         :customers_all_url => customers_all_url,
         :customers_creation_form_url => customers_creationform_url,
@@ -60,8 +59,8 @@ class ApplicationController < ActionController::Base
         :contacts_customer_contacts_url => contacts_customer_contacts_url,
         :contacts_delete_path =>  contacts_delete_path,
         :contacts_delete_url => contacts_delete_url,
-        :contacts_new_path => contacts_new_path,
-        :contacts_new_url => contacts_new_url,
+        :contacts_createForm_path => contacts_createForm_path,
+        :contacts_createForm_url => contacts_createForm_url,
         :contacts_update_path => contacts_update_path,
         :contacts_update_url => contacts_update_url,
         :contacts_editform_path => contacts_editform_path,

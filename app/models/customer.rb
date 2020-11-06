@@ -19,6 +19,7 @@ class Customer < ApplicationRecord
   validates :addresspostalcode, 
       format: { with: VALID_AREACODE_REGEX, message: "postal code is invalid" }
  
+  validates  :name, presence: {message: "A name must be defined"}
   validates  :relationshipstart, presence: {message: "A start date must be chosen"}
   validates  :activitytype, presence: {message: "An activity type must be chosen"}
   validates :addressapt, length:{maximum:12, message: "Apt value has more then 12 characters"} 

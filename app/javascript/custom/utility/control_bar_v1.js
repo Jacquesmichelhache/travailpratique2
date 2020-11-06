@@ -1,4 +1,4 @@
-
+//Jacques 06-11-2020
 //this is a control bar consisting of a filter input and a creation button
 //clients uses this api to define both filter and create actions to their respective table objects
 export let control_bar_v1 = (function(){
@@ -6,13 +6,15 @@ export let control_bar_v1 = (function(){
 
   return function(userParams){
     //private context
+
     let defaultParams = {
-      newText:"New"
-    }
+      newText:"New" //button text for the creation button
+    }  
+    let params = {...defaultParams,...userParams}
+
+    //observers
     let filterChangeObservers = []
     let newEventObservers = []
-
-    let params = {...defaultParams,...userParams}
 
     //layout elements
     let layout = {
@@ -39,10 +41,7 @@ export let control_bar_v1 = (function(){
 
       newBtn.className = "btn btn-sm btn-dark"
       newBtn.textContent = params.newText
-      newBtn.addEventListener("click",()=>{       
-        newEventNotify();
-      })
-
+      newBtn.addEventListener("click",()=>newEventNotify())
 
       flexContainer.appendChild(filterInput)
       flexContainer.appendChild(newBtn)
@@ -52,12 +51,10 @@ export let control_bar_v1 = (function(){
       layout.wrap = flexContainer;
     }    
 
-    async function init(){
-      createHtml()
-    }
+    
 
-    //filter observer methods
-    function addFilterChangeEvent(obs){
+    //observer management for the filter change event
+    function registerToFilterChangeEvent(obs){
       filterChangeObservers.push(obs)
     }
     function filterChangeEventNotify(value){
@@ -70,7 +67,7 @@ export let control_bar_v1 = (function(){
       })
     }
 
-    //creation observer methods
+    //observer management for the creation button click event
     function registerToNewEvent(obs){
       newEventObservers.push(obs)
     }
@@ -85,12 +82,16 @@ export let control_bar_v1 = (function(){
     }
     
 
+    function init(){
+      createHtml()
+    }
+
     //public context (api)
     return  {
-      init:init,
-      registerToFilterChangeEvent:addFilterChangeEvent,
+      init:init, //client must initialize the component before use in interface
+      registerToFilterChangeEvent:registerToFilterChangeEvent,
       registerToNewEvent:registerToNewEvent,
-      getWrap:()=>layout.wrap
+      getWrap:()=>layout.wrap //will return null if user does not initialize component
     }
   }
 })()

@@ -1,11 +1,20 @@
-export async function getCustomerContacts (customer_id = null, url = "",redirect_url = "") {
+//Jacques 06-11-2020
+export async function sendAjax (userParams = {}) {
+
+  let defaultParams = {
+    url:"",
+    method:"",
+    redirect_url:"",
+    params:{}
+  }
+  let params = {...defaultParams,...userParams}
   
 
   let x = document.getElementsByName("csrf-token")[0];
   let XSRF = x.content;
 
-  return fetch(url,{
-    method:"POST",
+  return fetch(params.url,{
+    method: params.method,
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
@@ -15,7 +24,7 @@ export async function getCustomerContacts (customer_id = null, url = "",redirect
       "content-type":"application/json",
       "Accept":"application/json"
     }   , 
-    body:JSON.stringify({customer_id:customer_id})
+    body:JSON.stringify(params.params)
   })
   .then(response=>{
     if(response.status !== 200) throw new Error(response.status)
@@ -25,8 +34,9 @@ export async function getCustomerContacts (customer_id = null, url = "",redirect
     return data  
   }).catch(function(e){
     if(e.Error == 401){
-      window.location.href = redirect_url
+      window.location.href = params.redirect_url
     }
+    console.log(e.message)
   })
 
 }
