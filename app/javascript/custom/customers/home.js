@@ -6,7 +6,7 @@ import {control_bar_v1} from '../utility/control_bar_v1';
 import {customerFormFactory} from './UI/new_customer_form';
 import {customerInformationFactory} from './UI/customer_information';
 import {deleteCustomer} from './ajax/delete_customer';
-
+import {showSnackBar} from '../utility/snackbar'
 
 //import {editCustomers} from 
 

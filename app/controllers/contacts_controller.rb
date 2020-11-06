@@ -43,32 +43,73 @@ class ContactsController < ApplicationController
 
   #POST
   def create
-    customer_id = params[:customer_id]
-    p = create_contact_params
 
-    #validate the model before commiting the changes
-    customer = Customer.find(customer_id)
-    new_contact = customer.contacts.build(p)  
+    begin
+      customer_id = params[:customer_id]
+      p = contact_params
 
-    if new_contact.valid? then
+      #validate the model before commiting the changes
+      customer = Customer.find(customer_id)
+      new_contact = customer.contacts.build(p)  
 
-      new_contact.save
-      respond_to do |format|
-        format.json { render json:{status: :valid}}        
+      if new_contact.valid? then
+
+        new_contact.save
+        respond_to do |format|
+          format.json { render json:{status: :valid}}        
+        end
+      else
+        
+        respond_to do |format|
+          format.json { render json:{status: :invalid, errors: new_contact.errors}}        
+        end
       end
-    else
-      
-      respond_to do |format|
-        format.json { render json:{status: :invalid, errors: new_contact.errors}}        
-      end
-    end  
 
+    rescue Exception => e
+      render  json:{operation_status:"error", error_message: e.message,customer_id:customer_id, customer:customer, p:p }  
+    end
+  end
+
+
+  #POST
+  def editform   
+
+    begin
+      @cont= Contact.find(params[:contact_id])
+
+      render  json: {operation_status:"success", 
+        htmlString: render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
+      }
+    rescue Exception => e
+      render  json:{operation_status:"error", error_message: e.message}  
+    end
 
   end
 
   #POST
   def update
+  
+    p = contact_params
+   
+    if current_user != nil then
+      contact = Contact.find(params[:contact_id])
 
+      if contact != nil then
+        if contact.update(p) then
+          respond_to do |format|
+            format.json { render json:{status: :valid, value: contact.to_json}}        
+          end
+        else
+          respond_to do |format|
+            format.json { render json:{status: :invalid, errors: contact.errors}}        
+          end
+        end
+      else
+
+      end      
+    else
+      render  json:{ operation_status:"error", error_message:"Fatal internal error: current_user is nil"}  
+    end
 
   end
 
@@ -77,9 +118,9 @@ class ContactsController < ApplicationController
     # params[:customerId] and params[:contactId]    
 
     begin
-      Contact.find(params[:contactId] ).destroy 
+      Contact.find(params[:contact_id] ).destroy 
 
-      customer =  Customer.find(params[:customerId] )
+      customer =  Customer.find(params[:customer_id] )
 
       render  json:{operation_status:"success", 
         error_message:"Contact successfully removed",
@@ -99,8 +140,8 @@ class ContactsController < ApplicationController
   end
 
   private
-    def create_contact_params
-      params.require(:create_contact).permit(:name, :firstname, :email,
+    def contact_params
+      params.require(:contact).permit(:name, :firstname, :email,
         :tel, :ext)
     end
 

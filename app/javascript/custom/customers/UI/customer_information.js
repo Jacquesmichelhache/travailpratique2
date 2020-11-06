@@ -1,9 +1,8 @@
 import {overlayFactory} from '../../utility/overlay';
 import {tabElementFactory} from '../../utility/tabElement';
-import {editCustomerFormFactory} from '../UI/edit_customer_form';
 import {contactsPageFactory} from '../../contacts/UI/contacts_page';
-
-
+import {editCustomerFormFactory} from './edit_customer_form';
+import {showSnackBar} from '../../utility/snackbar'
 
 export let customerInformationFactory = (function(){
   //context static  
@@ -27,7 +26,7 @@ export let customerInformationFactory = (function(){
 
     
     function setDatePicker(){  
-      $("#edit_relationshipstart").datepicker({
+      $("#customer_relationshipstart").datepicker({
         locale: "en",
         sideBySIde: true,
         dateFormat: 'dd-m-yy'     
@@ -45,7 +44,7 @@ export let customerInformationFactory = (function(){
     }
 
     async function createLayout(){  
-      overlay = overlayFactory();
+      overlay = overlayFactory({maxWidth:"600px"});
 
       let tabLayout = createTabLayout();
 
@@ -66,12 +65,8 @@ export let customerInformationFactory = (function(){
         setTimeout(()=>contactsPage.autoSizeColumns(),250)
       })
     
-      overlay.append(tabLayout.getWrap())     
-
-     // document.body.appendChild(overlay.domElement)
-
-
-
+      overlay.append(tabLayout.getWrap())   
+    
 
        //init datepicker
        setTimeout(()=>{
@@ -79,7 +74,7 @@ export let customerInformationFactory = (function(){
        },100)
       
 
-       overlay.on();
+       overlay.show();
     
     }  
 
@@ -94,7 +89,7 @@ export let customerInformationFactory = (function(){
     //public context (api)
     return  {
       show:show,
-      close:()=>overlay && overlay.off()
+      close:()=>overlay && overlay.close()
 
     }
   }

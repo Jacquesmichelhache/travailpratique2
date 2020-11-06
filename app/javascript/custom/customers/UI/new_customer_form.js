@@ -1,6 +1,6 @@
 import {get_new_customer_form} from '../ajax/get_new_customer_form';
 import {overlayFactory} from '../../utility/overlay';
-
+import {showSnackBar} from '../../utility/snackbar'
 
 //Basic structure template
 export let customerFormFactory = (function(){
@@ -30,7 +30,7 @@ export let customerFormFactory = (function(){
       if(data.status === "valid"){
         
         showSnackBar("Successfully created a customer")
-        overlay.off();
+        overlay.close();
         clientCreateNotify();       
   
       }else{
@@ -59,7 +59,7 @@ export let customerFormFactory = (function(){
       let response = await get_new_customer_form(window.appRoutes.customers_creation_form_path, window.appRoutes.root_url)
 
       if(response && response.customerView ){
-        overlay = overlayFactory();
+        overlay = overlayFactory({maxWidth:"500px"});
        // document.body.appendChild(overlay.domElement)
 
         overlay.append(response.customerView);
@@ -70,7 +70,7 @@ export let customerFormFactory = (function(){
           setCreateButton();
         },100)      
 
-        overlay.on();
+        overlay.show();
       }       
     }
 
@@ -80,7 +80,7 @@ export let customerFormFactory = (function(){
     function clientCreateNotify(){
       successObservers.forEach((obs)=>{
         try{
-          obs();
+          obs().bind(obs);
         }catch(e){
 
         }

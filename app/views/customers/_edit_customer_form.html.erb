@@ -1,6 +1,6 @@
- <div id="cust_edit_errors"></div>     
+ <div class="d-flex flex-column align-items-center" id="cust_edit_errors"></div>     
 
-  <%= form_with(model: @cust, url: customers_update_path , method: "post", html: {id: :edit_customer_form, style: "max-width:600px;flexgrow:1;width:100%"}, scope: "edit") do |n| %>
+  <%= form_with(model: @cust, url: customers_update_path , method: "post", html: {id: :edit_customer_form, style: "max-width:600px;flexgrow:1;width:100%"}, scope: "customer") do |n| %>
     <div name="header" class="form_title">  
       Customer Information
     </div>
@@ -43,42 +43,3 @@
   <% end %>  
       
 
-
-
-<%# 
-
-<script type="text/javascript">  
- 
-
-  $("#edit_customer_form").on('ajax:success', (event)=>{
-    [data, status, xhr] = event.detail   
-
-    if(data.status === "valid"){
-      
-      showSnackBar("Successfully saved changes")
-
-      //reloads the customer table by refreshing the page
-      $("#customer_ctn").fadeOut(200,()=>{location.reload()})    
-    console.log(data.value)
-    }else{
-
-      showSnackBar("Error: unable to save changes")
-
-      if(typeof data.errors === "object"){
-
-
-        $("#cust_edit_errors").empty()
-
-        //show list of errors to client
-        Object.keys(data.errors).forEach(key => {
-            let errorLabel = document.createElement("div");
-            errorLabel.textContent = data.errors[key][0]
-            errorLabel.className = "invalid-information"
-            $("#cust_edit_errors").append(errorLabel)
-        });
-      } 
-    }   
-  })
-
- 
-</script> %>

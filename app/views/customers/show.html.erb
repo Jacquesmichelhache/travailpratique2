@@ -1,62 +1,7 @@
-
-<div name="header" class="login_title">  
-      Customer list
-</div>
+<div name="header" class="login_title">Customer list</div>
 
 <div name="body"  id="customer_app"></div>
 
-
-</div name="footer" >
-
-<div>
-
-
-<%# <div class="d-flex flex-row align-items-end justify-content-between"> 
-  <input id="customer_filter" type="text" placeholder="filter.." class="form-control customer-filter-input" > 
-  <button id="newCustomerBtn" class="btn btn-sm btn-dark">New Customer</button>
-</div> %>
-
-<div id="customer_grid" class="ag-theme-alpine" style="width:auto;border:none;margin-top:20px"></div>
-
-
-
-<div id="customer_ctn" style="display:none">
-  <div id="edit-overlay" class="overlay">
-    <div class="row no-gutters">
-      <div class="col-sm-12 col-md-8 offset-md-2">
-
-
-
-        <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn"> 
-
-          <h2 id="customer-name" name="header" class="login_title" style="margin:0px 0px 25px 0px">  
-               Customer name..
-          </h2>
-
-          <ul class="nav nav-tabs" style="width:100%" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="customer-tab" data-toggle="tab" href="#customer-panel" role="tab" aria-controls="customer" aria-selected="true">Customer</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="contacts-tab" data-toggle="tab" href="#contacts-panel" role="tab" aria-controls="contacts" aria-selected="false">Contacts</a>
-            </li>            
-          </ul>
-
-          <div class="tab-content" style="width:100%" id="myTabContent">
-              <div class="tab-pane fade show active" id="customer-panel" role="tabpanel" aria-labelledby="customer-tab"></div>
-              <div class="tab-pane fade" id="contacts-panel" role="tabpanel-tab" aria-labelledby="contacts-tab"></div>
-          </div>
-
-        </div>
-
-
-
-        
-      </div>
-    </div>
-  </div>
-</div>
-
+</div name="footer" ><div>
 
 <%= javascript_pack_tag 'customers_home' %>
-

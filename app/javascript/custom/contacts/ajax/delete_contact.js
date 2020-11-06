@@ -1,4 +1,4 @@
-window.deleteContact = async function (customerId = null, contactId=null, url = "") {  
+export let deleteContact = async function (customer_id = null, contact_id=null, url = "") {  
 
   let x = document.getElementsByName("csrf-token")[0];
   let XSRF = x.content;
@@ -14,7 +14,7 @@ window.deleteContact = async function (customerId = null, contactId=null, url = 
       "content-type":"application/json",
       "Accept":"application/json"
     },
-    body:JSON.stringify({customerId:customerId,contactId:contactId})
+    body:JSON.stringify({customer_id:customer_id,contact_id:contact_id})
   })
   .then(response=>{
     if(response.status !== 200) throw new Error(response.status)

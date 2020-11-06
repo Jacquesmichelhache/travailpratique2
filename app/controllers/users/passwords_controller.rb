@@ -28,7 +28,7 @@ class Users::PasswordsController < Devise::PasswordsController
     set_minimum_password_length
     resource.reset_password_token = params[:reset_password_token]
 
-   # redirect_to root_path(panel:"password_edit")    
+    #redirect_to root_path(panel:"password_edit")    
   end
 
   # PUT /resource/password

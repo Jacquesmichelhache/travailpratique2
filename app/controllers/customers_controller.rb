@@ -69,7 +69,7 @@ class CustomersController < ApplicationController
   def update
 
     #get filtered parameters
-    p = edit_customer_params
+    p = customer_params
 
    
     if current_user != nil then
@@ -127,7 +127,7 @@ class CustomersController < ApplicationController
 
   #POST
   def create
-    p = create_customer_params
+    p = customer_params
 
     #validate the model before commiting the changes
 
@@ -157,16 +157,10 @@ class CustomersController < ApplicationController
 
 
   private
-    def create_customer_params
-      params.require(:create).permit(:name, :relationshipstart, :addresscity,
+    def customer_params
+      params.require(:customer).permit(:name, :relationshipstart, :addresscity,
         :addresspostalcode, :addressstreet, :addressapt, :activitytype,
       :infoemail)
-    end
-
-    def edit_customer_params
-      params.require(:edit).permit(:name, :relationshipstart, :addresscity,
-        :addresspostalcode, :addressstreet, :addressapt, :activitytype,
-      :infoemail)
-    end
+    end  
 
 end

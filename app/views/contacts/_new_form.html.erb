@@ -1,7 +1,7 @@
  
-<div id="contact_creation_errors"></div>    
+<div class="d-flex flex-column align-items-center" id="contact_creation_errors"></div>    
 
-<%= form_with(model: @new_contact, url: contacts_create_path , method: "post", html: {id: :create_contact_form}, scope: "create") do |n| %>
+<%= form_with(model: @new_contact, url: contacts_create_path , method: "post", html: {id: :create_contact_form}, scope: "contact") do |n| %>
   <div name="header" class="form_title">  
     Create a new contact
   </div>

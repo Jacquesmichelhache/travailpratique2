@@ -1,6 +1,6 @@
 import {getNewContactForm} from '../../contacts/ajax/new_contact';
 import {overlayFactory} from '../../utility/overlay';
-
+import {showSnackBar} from '../../utility/snackbar'
 
 //Basic structure template
 export let contactFormFactory = (function(){
@@ -33,7 +33,7 @@ export let contactFormFactory = (function(){
       if(data.status === "valid"){
         
         showSnackBar("Successfully created a contact")
-        overlay.off();
+        overlay.close();
         clientCreateNotify();       
   
       }else{
@@ -74,7 +74,7 @@ export let contactFormFactory = (function(){
           setCreateButton();
          },100)      
   
-        overlay.on();
+        overlay.show();
       } 
     }
 

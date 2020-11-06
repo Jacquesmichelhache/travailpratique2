@@ -1,4 +1,5 @@
 import {get_edit_customer_form} from '../ajax/get_edit_form'
+import {showSnackBar} from '../../utility/snackbar'
 
 //Basic structure template
 export let editCustomerFormFactory = (function(){
@@ -30,7 +31,7 @@ export let editCustomerFormFactory = (function(){
 
       }else{
         console.log(data)
-        showSnackBar("Error: Unable to create customer")
+        showSnackBar("Error: Unable to update customer")
   
         if(typeof data.errors === "object"){
           showErrors(data.errors)         

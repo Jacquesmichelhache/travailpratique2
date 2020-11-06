@@ -1,55 +1,42 @@
-export let overlayFactory = function (panelWidth = "75%", panelHeight = "auto", userOptions = {}) {
+//this is a overlay utility component
+
+export let overlayFactory = function (userOptions = {}) {
+
+    let options = {
+        removeWhenClosed: true, //clear dom elements if true
+        clickBackgroundToClose:true,     
+        stopPropagation:false, //should be false, if not, some componenets inside panel may not work properly
+        width:"100%",
+        maxWidth:"",
+        minWidth:"200px"
+    }
+    options = { ...JSON.parse(JSON.stringify(options)), ...userOptions}
 
   let overlay = document.createElement("div");
-  let columnFlex = document.createElement("div");
-  let panel = document.createElement("div");
-  let panelColumnFlex = document.createElement("div");
+  let bootstrapRow = document.createElement("div");
+  let bootstrapCol = document.createElement("div");
+  let rowFlex = document.createElement("div"); 
+  let flexPanel = document.createElement("div"); 
+    
+  //styling
+  bootstrapRow.className = "row no-gutter"
+  bootstrapCol.className = "col-sm-12 col-md-8 offset-md-2"
+  rowFlex.className = "d-flex flex-row justify-content-center"
+  flexPanel.className = "d-flex flex-column align-items-center justify-content-center overlay-ctn"
+  overlay.className = "overlay";    
 
-  let options = {
-      removeWhenClosed: true,
-      clickBackgroundToClose:true,
-      minWidth: "",
-      maxWidth: "",
-      minHeight: "400px",
-      maxHeight: "",
-      stopPropagation:false,
-  }
-  options = { ...JSON.parse(JSON.stringify(options)), ...userOptions}
+  rowFlex.style.width = "100%"
 
-  columnFlex.className = "d-flex flex-column flex-nowrap align-items-center";
-  columnFlex.style.backgroundColor = "transparent";
-  columnFlex.style.height = "100%";
-  columnFlex.dataset["overlay"] = "true";
+  flexPanel.style.width = options.width
+  flexPanel.style.maxWidth = options.maxWidth
+  flexPanel.style.minWidth = options.minWidth
+  flexPanel.style.marginTop = "20px"
   
-
-  panel.className = "d-flex flex-column flex-nowrap align-items-center";
-  panel.style.position = "relative";
-  panel.style.width = panelWidth;
-  panel.style.height = panelHeight;   
-  panel.style.minWidth = options.minWidth;
-  panel.style.maxWidth = options.maxWidth;
-  panel.style.minHeight = options.minHeight;
-  panel.style.maxHeight = options.maxHeight;
-  panel.style.backgroundColor = "white";
-  panel.style.padding = "20px";
-  panel.style.marginTop = "20px";
-
-
-  panelColumnFlex.className = "d-flex flex-column flex-nowrap";
-  panelColumnFlex.style.overflow = "auto";
-  panelColumnFlex.style.width = "100%"
-  panelColumnFlex.style.height = "100%";
-
-
-  panel.appendChild(panelColumnFlex);
-
-  columnFlex.appendChild(panel);
-
-  overlay.className = "filedialog-overlay";     
-  overlay.dataset["overlay"] = "true";
-  overlay.style.overflowX = "auto";      
+  //events
   overlay.addEventListener("mousedown", (e) => {
-      if (e.path[0] == columnFlex) {
+
+      //close overlay if user mousedown on it, or apply user settings otherwise
+      if (e.path[0] == bootstrapRow || e.path[0] == overlay || e.path[0] == rowFlex) {
           if (options.clickBackgroundToClose === true) {
               $(overlay).fadeOut(250, function () {
                   if (options.removeWhenClosed === true) {
@@ -58,7 +45,8 @@ export let overlayFactory = function (panelWidth = "75%", panelHeight = "auto", 
               });
           }            
       } else {
-          //if event came from panel, let it go through without closing overlay
+          //if event originated from a child element of panel, let it go through without closing overlay
+          //this is important for bootstrap components to work properly
       }              
   });
   overlay.addEventListener("click", (e) => {
@@ -66,35 +54,44 @@ export let overlayFactory = function (panelWidth = "75%", panelHeight = "auto", 
           e.stopPropagation();
       }
   })
-  overlay.appendChild(columnFlex);
 
-
+  //appending
+  rowFlex.appendChild(flexPanel)
+  bootstrapCol.appendChild(rowFlex)
+  bootstrapRow.appendChild(bootstrapCol) 
+  overlay.appendChild(bootstrapRow);
   document.body.appendChild(overlay)
 
+  //methods
+  function append(el){
+    if(el instanceof HTMLElement){
+        flexPanel.appendChild(el)
+      }  else if(typeof el === "string"){
+        flexPanel.innerHTML = el;
+    }
+  }
+  function close(){
+    $(overlay).fadeOut(250, function () {
+        if (options.removeWhenClosed === true) {
+            $(overlay).remove();
+        }
+    }); 
+  }
+  function show(){
+    $(overlay).fadeIn()
+  }
+
+
+  //public facing API
   let returnObject =
   {
       domElement: overlay,
-      on: function () {
-          $(overlay).fadeIn();          
-      },
-      off: function () {
-          $(overlay).fadeOut(250, function () {
-              if (options.removeWhenClosed === true) {
-                  $(overlay).remove();
-              }
-          });           
-      },
-      getBodyElement: function () {
-          return panelColumnFlex;
-      },
+      show, close,      
       removeWhenClosed:false,
-      append:function(el){
-          if(el instanceof HTMLElement){
-            panelColumnFlex.appendChild(el)
-          }  else if(typeof el === "string"){
-            panelColumnFlex.innerHTML = el;
-          }       
-      }      
+      append:append,
+      getBodyElement: ()=>flexPanel
+    
   };
+
   return returnObject;
 };

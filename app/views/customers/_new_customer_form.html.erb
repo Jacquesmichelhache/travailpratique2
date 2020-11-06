@@ -1,7 +1,7 @@
   
-<div id="cust_creation_errors"></div>    
+<div class="d-flex flex-column align-items-center" id="cust_creation_errors"></div>    
 
-<%= form_with(model: @new_customer, html: {id: :create_customer_form}, scope: "create") do |n| %>
+<%= form_with(model: @new_customer, html: {id: :create_customer_form, style: "width:100%;max-width:500px;min-width:250px"}, scope: "customer") do |n| %>
   <div name="header" class="form_title">  
     Create a new customer
   </div>
@@ -40,82 +40,3 @@
   </div>          
 <% end %>   
        
-
-<%# 
-<script type="text/javascript"> 
-
-//create a private scope
-(()=>{
-
-  //closes create contact overlay only when user clicks outside of the panel
-  let new_customer_overlay = document.getElementById("new_customer_overlay")
-  new_customer_overlay.addEventListener("mousedown", (e) => {
-        if (e.path[1] && e.path[1] == new_customer_overlay || e.path[0] == new_customer_overlay) {
-          $("#newCustomerContainer").fadeOut();
-          $("#cust_creation_errors").empty();
-        }
-  }) 
-
-  //init datepicker
-  $("#create_relationshipstart").datepicker({
-    locale: "en",
-    sideBySIde: true,
-    dateFormat: 'dd-m-yy'     
-  });
-
-  //prevents form from closing when user clicks inside of it
-  $(".overlay-ctn").on("click",(e)=>{
-    e.stopPropagation();
-  })
-
-  //After user submits form, disable the submit button and clear errors
-  $("#create_customer_form").submit(()=>{
-
-    $("#create_customer_btn").attr("disabled",true);
-    $("#cust_creation_errors").empty();
-
-    return true; //submit form (false to cancel)
-  });  
-
-
-  //handles controller response to customer creation
-  $("#create_customer_form").on('ajax:success', createCustomerResponse)
-  
-  function createCustomerResponse(event){
-    [data, status, xhr] = event.detail   
-
-    if(data.status === "valid"){
-      
-      showSnackBar("Successfully created a customer")
-
-      //reloads the customer table by refreshing the page
-      $("#newCustomerContainer").fadeOut(200,()=>{location.reload()})    
-
-    }else{
-
-      showSnackBar("Error: Unable to create customer")
-
-      if(typeof data.errors === "object"){
-
-         $("#cust_creation_errors").empty()
-
-        //show list of errors to client
-        Object.keys(data.errors).forEach(key => {
-            let errorLabel = document.createElement("div");
-            errorLabel.textContent = data.errors[key][0]
-            errorLabel.className = "invalid-information"
-            $("#cust_creation_errors").append(errorLabel)
-        });
-      } 
-    }
-  }
-
-
-  //handles error if communication failure
-  document.body.addEventListener('ajax:error', function(event) {
-      showSnackBar("Error: problem communicating with server")   
-  })  
-
-})();
-
-</script> %>

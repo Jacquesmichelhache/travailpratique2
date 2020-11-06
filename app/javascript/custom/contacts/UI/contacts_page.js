@@ -1,7 +1,12 @@
 
 import {contactFormFactory} from './new_contact_form'
+import {editContactFormFactory} from './edit_contact_form'
 import {getCustomerContacts} from '../ajax/get_customer_contacts'
 import {control_bar_v1} from '../../utility/control_bar_v1';
+import {yesNoDialog} from '../../utility/yesNoDialog';
+import {deleteContact} from '../ajax/delete_contact';
+import {showSnackBar} from '../../utility/snackbar'
+
 
 
 export let contactsPageFactory = (function(){
@@ -23,16 +28,16 @@ export let contactsPageFactory = (function(){
     //let updateObservers = [];
 
 
-    let deleteButtonCallback = async (params)=>{
+    let deleteButtonCallback = async (tableRow)=>{
       //params is an agGrid object
       let result = await yesNoDialog();
 
       if(result === "yes"){
 
         //delete item                
-        let response = await deleteContact(params.data.id, 
-                                            window.appRoutes.contact_delete_path,
-                                            window.appRoutes.root_url)
+        let response = await deleteContact(params.customer_id, tableRow.data.id,                                         
+                                          window.appRoutes.contacts_delete_path,
+                                          window.appRoutes.root_url)
 
         if(response == null){
           showSnackBar("Error: could not delete contact")
@@ -45,12 +50,13 @@ export let contactsPageFactory = (function(){
       } 
     }
 
-    let editButtonCallBack = (params) =>{
-      let form = contactInformationFactory({contact_id: params.data.id,
-          onContactChange:()=>{
-            form.close();
-            refreshContactsTable();
-            }
+    let editButtonCallBack = (tableRow) =>{
+      let form = editContactFormFactory({
+        contact_id: tableRow.data.id,
+        onContactChange:()=>{
+          form.close();
+          refreshContactsTable();
+          }
         })
 
       form.show();     
@@ -107,7 +113,7 @@ export let contactsPageFactory = (function(){
 
     async function refreshContactsTable(){
       let contacts = await getCustomerContacts(params.customer_id, 
-        window.appRoutes.customers_customer_contacts_path,
+        window.appRoutes.contacts_customer_contacts_path,
         window.appRoutes.root_url)
 
       setContactsTable(JSON.parse(contacts.value))

@@ -16,32 +16,15 @@ export let tabElementFactory = (function(){
       tabContentCtn:null,
     }
     let isFirstTab = true;
-
-  //   <div class="d-flex flex-column align-items-center justify-content-center overlay-ctn"> 
   
-
-  //   <ul class="nav nav-tabs" style="width:100%" id="myTab" role="tablist">
-  //     <li class="nav-item">
-  //       <a class="nav-link active" id="customer-tab" data-toggle="tab" href="#customer-panel" role="tab" aria-controls="customer" aria-selected="true">Customer</a>
-  //     </li>
-  //     <li class="nav-item">
-  //       <a class="nav-link" id="contacts-tab" data-toggle="tab" href="#contacts-panel" role="tab" aria-controls="contacts" aria-selected="false">Contacts</a>
-  //     </li>            
-  //   </ul>
-
-  //   <div class="tab-content" style="width:100%" id="myTabContent">
-  //       <div class="tab-pane fade show active" id="customer-panel" role="tabpanel" aria-labelledby="customer-tab"></div>
-  //       <div class="tab-pane fade" id="contacts-panel" role="tabpanel-tab" aria-labelledby="contacts-tab"></div>
-  //   </div>
-
-  // </div>
 
     function createLayout(){
       let wrap = document.createElement("div")
       let navTabsCtn = document.createElement("ul")
       let tabContentCtn = document.createElement("div")
 
-      wrap.className = "d-flex flex-column align-items-center justify-content-center overlay-ctn"
+      wrap.className = "d-flex flex-column align-items-center justify-content-center"
+      wrap.style.width = "100%"
 
       navTabsCtn.className = "nav nav-tabs"
       navTabsCtn.style.width = "100%";

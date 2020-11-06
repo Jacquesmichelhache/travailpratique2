@@ -1,4 +1,4 @@
-window.all_contacts = async function (customer_id = null, url = "") {  
+export async function get_edit_contact_form(contact_id, url = "",redirect_url = "") {  
 
   let x = document.getElementsByName("csrf-token")[0];
   let XSRF = x.content;
@@ -13,8 +13,8 @@ window.all_contacts = async function (customer_id = null, url = "") {
       "X-CSRF-Token": XSRF,
       "content-type":"application/json",
       "Accept":"application/json"
-    },
-    body:JSON.stringify({customer_id:customer_id})
+    }   ,
+    body:JSON.stringify({contact_id:contact_id})
   })
   .then(response=>{
     if(response.status !== 200) throw new Error(response.status)
@@ -24,7 +24,7 @@ window.all_contacts = async function (customer_id = null, url = "") {
     return data  
   }).catch(function(e){
     if(e.Error == 401){
-      alert(e)
+      window.location.href = redirect_url
     }
   })
 

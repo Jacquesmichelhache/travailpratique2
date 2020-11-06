@@ -1,0 +1,33 @@
+<div class="d-flex flex-column align-items-center" id="contact_update_errors"></div>    
+
+<%= form_with(model: @contact, url: contacts_update_path , method: "post", html: {id: :update_contact_form}, scope: "contact") do |n| %>
+  <div name="header" class="form_title">  
+    Contact Information
+  </div>
+
+  <div name="update_contact"  class="form_body">      
+
+    <%= hidden_field_tag "contact_id", @contact.id %>
+
+    <%= n.label :Name %>
+    <%= n.text_field :name, class: 'form-control' %>
+
+    <%= n.label :"First name" %>
+    <%= n.text_field :firstname, class: 'form-control' %>  
+  
+
+    <%= n.label :"Telephone" %>
+    <%= n.text_field :tel, class: 'form-control' %>
+
+    <%= n.label :"Extension" %>
+    <%= n.text_field :ext, class: 'form-control' %> 
+
+    <%= n.label :"Email" %>
+    <%= n.text_field :email, class: 'form-control' %> 
+
+  </div>  
+
+  <div name="footer" class="d-flex flex-row justify-content-center align-items-center">  
+    <%= n.submit "Save Contact", {id: :update_contact_btn, class: "btn btn-primary"} %>              
+  </div>          
+<% end %>  

@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   get '/logout', to: 'static_pages#logout'  
   get '/password_reset', to: 'static_pages#password_reset'
-
+  
 
   #Customers
   get '/customers', to: 'customers#show' #returns a view with all the customers
@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   post   '/contacts/new', to: 'contacts#new'
   post '/contacts/create', to: 'contacts#create'
   post '/contacts/customer_contacts', to: 'contacts#customer_contacts'
+  post '/contacts/update', to: 'contacts#update'
+  post '/contacts/editform', to: 'contacts#editform'
 
   
 end

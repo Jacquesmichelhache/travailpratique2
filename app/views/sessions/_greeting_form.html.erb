@@ -25,6 +25,10 @@
             <%= render 'sessions/recovery_confirmation' %>
           </div> 
 
+           <div id="recovery_new_password_container" class="greeting-container">
+            <%= render 'sessions/recovery_new_password' %>
+          </div> 
+
         </div> 
       </div>
     </div>
@@ -32,6 +36,9 @@
 </div>
 
 <script type="text/javascript"> 
+
+(()=>{
+  $(".overlay").fadeIn();
   let reset = <%= @reset%>
   let panel = "<%= @panel%>"
 
@@ -76,6 +83,9 @@
     if(panel !== ""){
       if(panel === "password_reset"){
         setPanelState("recovery_confirmationContainer","0s") 
+      }else if(panel === "password_edit"){
+        setPanelState("recovery_new_password_container","0s") 
+
       }else{
         setPanelState(panel,"0s") 
       }
@@ -84,6 +94,6 @@
     }
   }
   
- 
+ })()
 
 </script>

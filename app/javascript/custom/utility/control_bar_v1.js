@@ -1,3 +1,6 @@
+
+//this is a control bar consisting of a filter input and a creation button
+//clients uses this api to define both filter and create actions to their respective table objects
 export let control_bar_v1 = (function(){
   //context static  
 
@@ -53,25 +56,28 @@ export let control_bar_v1 = (function(){
       createHtml()
     }
 
+    //filter observer methods
     function addFilterChangeEvent(obs){
       filterChangeObservers.push(obs)
     }
     function filterChangeEventNotify(value){
       filterChangeObservers.forEach((obs)=>{
-        try{            
-          obs(value).bind(obs)
+        try{    
+          obs.apply(obs,[value]);  
         }catch(e){
           console.log(e.message)
         }
       })
     }
+
+    //creation observer methods
     function registerToNewEvent(obs){
       newEventObservers.push(obs)
     }
     function newEventNotify(){
       newEventObservers.forEach((obs)=>{
         try{            
-          obs().bind(obs)
+          obs.apply(obs);
         }catch(e){
           console.log(e.message)
         }

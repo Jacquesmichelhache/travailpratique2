@@ -1,4 +1,4 @@
-window.showSnackBar = function(message = ""){
+export function showSnackBar(message = ""){
   // Get the snackbar DIV
   let snackbar = document.getElementById("snackbar");
   snackbar.textContent = message;

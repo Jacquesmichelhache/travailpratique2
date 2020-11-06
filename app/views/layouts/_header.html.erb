@@ -22,12 +22,8 @@
 
     <% else %>
 
-      <% if request.original_url == logout_url || request.original_url == password_reset_url  %>
-        <li class="nav-item active">
-          
-          <%= link_to "Log in", root_path(reset:1) %>         
-        </li>
-       <% end %>
+       <%= link_to "Log in", root_path(reset:1) %>  
+      
 
     <% end %>      
 

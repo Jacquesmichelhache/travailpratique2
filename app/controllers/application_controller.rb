@@ -61,7 +61,11 @@ class ApplicationController < ActionController::Base
         :contacts_delete_path =>  contacts_delete_path,
         :contacts_delete_url => contacts_delete_url,
         :contacts_new_path => contacts_new_path,
-        :contacts_new_url =>contacts_new_url
+        :contacts_new_url => contacts_new_url,
+        :contacts_update_path => contacts_update_path,
+        :contacts_update_url => contacts_update_url,
+        :contacts_editform_path => contacts_editform_path,
+        :contacts_editform_url => contacts_editform_url
         }
     end
   

@@ -15,10 +15,6 @@ require("popper.js")
 require("bootstrap")
 
 //utility
-require("../custom/utility/snackbar")
-require("../custom/utility/snackbar2")
-require("../custom/utility/yesNoDialog")
-require("../custom/utility/overlay")
 require("../custom/aggrid_helpers/edit_column_aggrid")
 
 //customers ajax

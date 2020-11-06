@@ -27,6 +27,11 @@
 
 <script>
   //provides applicating routing urls and paths
-  let routes = JSON.parse('<%= raw(@routes.to_json) %>')
-  window.appRoutes = routes
+  try{
+    let routes = JSON.parse('<%= raw(@routes.to_json) %>')
+    window.appRoutes = routes
+  }catch(e){
+
+  }
+
 </script>
