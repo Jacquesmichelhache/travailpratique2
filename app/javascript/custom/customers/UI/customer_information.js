@@ -55,9 +55,9 @@ export let customerInformationFactory = (function(){
       overlay.append(tabLayout.getWrap())   
     
 
-       //init datepicker
+       //dates must be formated to UTC
        setTimeout(()=>{
-        setDatePicker("#customer_relationshipstart");      
+        setDatePicker("#customer_relationshipstart");       
        },100)
       
 

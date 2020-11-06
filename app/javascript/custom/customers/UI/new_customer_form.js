@@ -68,7 +68,7 @@ export let customerFormFactory = (function(){
         //Give a few milliseconds for the DOM to be updated with the form BEFORE
         //executing the setters 
         setTimeout(()=>{
-          setDatePicker(".datepicker"); //to format dates
+          setDatePicker(".datepicker"); //dates must be formated to UTC. this is done by calling setDatePicker
           setCreateButton(); //to hook event listeners to the submit button
         },100)      
 

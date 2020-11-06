@@ -43,8 +43,7 @@ export let customersHomeFactory = (function homeAPI(){
     //private context 
 
     let customersTable = null;
-    let customersTableOptions = null;
-    let costumer_id = -1; 
+    let customersTableOptions = null;   
     let controlBar = null 
 
     //called by the ag-grid custom component
