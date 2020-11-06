@@ -193,9 +193,15 @@ export let customersHomeFactory = (function homeAPI(){
     } 
 
     async function getCustomers(){
-      return await sendAjax({method: "POST",
+      let customers = await sendAjax({method: "POST",
       url: window.appRoutes.customers_all_path, 
       redirect_url: window.appRoutes.root_url})
+
+      if(customers == null){
+        //window.location.href = window.appRoutes.root_url;
+      }else{
+        return customers;
+      }
     }
 
     //helper method

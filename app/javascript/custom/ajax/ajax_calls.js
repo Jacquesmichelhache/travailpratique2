@@ -33,8 +33,10 @@ export async function sendAjax (userParams = {}) {
   .then(data=>{
     return data  
   }).catch(function(e){
-    if(e.Error == 401){
-      window.location.href = params.redirect_url
+    //if user is not logged in the server will return a HTTP 401 unauthorize
+    //redirect to root_url for login
+    if(e.message == "401"){    
+      window.location.href = window.appRoutes.root_url;     
     }
     console.log(e.message)
   })

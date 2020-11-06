@@ -13,7 +13,7 @@ class Customer < ApplicationRecord
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i  
   validates :infoemail, presence: {message: "Email cannot be blank"}, length:{maximum:255},
-      format: { with: VALID_EMAIL_REGEX , message: "Email format is invalid" }
+      format: { with: @VALID_EMAIL_REGEX , message: "Email format is invalid" }
 
   VALID_AREACODE_REGEX = /\A[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1}[ -]?\d{1}[A-Z]{1}\d{1}\z/i  
   validates :addresspostalcode, 

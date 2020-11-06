@@ -38,16 +38,18 @@ class ApplicationController < ActionController::Base
     end
 
     def set_cache_headers
-      response.headers["Cache-Control"] = "no-cache, no-store"
-      response.headers["Pragma"] = "no-cache"
-      response.headers["Expires"] = "Mon, 01 Jan 1990 00:00:00 GMT"    
-
-      @routes =  {test: "hello"}
+      # response.headers["Cache-Control"] = "no-cache, no-store"
+      # response.headers["Pragma"] = "no-cache"
+      # response.headers["Expires"] = "Mon, 01 Jan 1990 00:00:00 GMT"  
     end
 
+
+    #the routes hash is provided globally to the client javascript
+    #for use when defining ajax calls to the server
     def set_route_information
       @routes =  {
         :root_url => root_url,
+        :root_path => root_path,
         :customers_delete_path => customers_delete_path,    
         :customers_all_path => customers_all_path,
         :customers_all_url => customers_all_url,

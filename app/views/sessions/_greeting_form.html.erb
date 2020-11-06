@@ -37,8 +37,15 @@
 
 <script type="text/javascript"> 
 
+//must create a private context to avoid collisions
 (()=>{
   $(".overlay").fadeIn();
+  //the server can return with a reset flag and a value for the panel
+  //when reset=1, the greeting screens becomes the login screen
+  //when reset=0 and panel is defined, the greeting screen is set to the given panel
+  //this is to ensure that redirects from errors refreshes the page to the panel associated with the errors
+  // ***this implementation should be redesigned***.
+
   let reset = <%= @reset%>
   let panel = "<%= @panel%>"
 
@@ -46,6 +53,7 @@
   console.log(reset)
   let panelId = "";
 
+  //allows the user to refresh the page and land on the same panel as before the refresh
   if(sessionStorage) panelId = sessionStorage.getItem("greetingStatus");
  
   const setPanelState = (panelId, duration = "1s", clearAlerts = false)=>{
@@ -70,13 +78,15 @@
     history.replaceState(null, null, "?"+queryParams.toString());
   } 
 
+  //links allowing to user to navigate accross panels
   $(".signup-link").on("click",(e)=> setPanelState("signupcontainer","1s",true))
   $(".login-link").on("click",(e)=>setPanelState("logincontainer","1s",true))
   $(".recovery-link").on("click",(e)=>setPanelState("recoveryContainer","1s",true)) 
 
 
 
-   //init first panel
+  //init first panel according to server values. if no server values, go with sessionStorage values.
+  //if no sessionStorage values, setPanelState will default to the login page 
   if(reset === 1){
     setPanelState("logincontainer","0s")
   }else{
@@ -85,7 +95,6 @@
         setPanelState("recovery_confirmationContainer","0s") 
       }else if(panel === "password_edit"){
         setPanelState("recovery_new_password_container","0s") 
-
       }else{
         setPanelState(panel,"0s") 
       }

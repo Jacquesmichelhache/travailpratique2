@@ -22,7 +22,7 @@ export let overlayFactory = function (userOptions = {}) {
   let flexPanel = document.createElement("div"); 
     
   //styling
-  bootstrapRow.className = "row no-gutter"
+  bootstrapRow.className = "row no-gutter login_row"
   bootstrapCol.className = "col-sm-12 col-md-8 offset-md-2"
   rowFlex.className = "d-flex flex-row justify-content-center"
   flexPanel.className = "d-flex flex-column align-items-center justify-content-center overlay-ctn"

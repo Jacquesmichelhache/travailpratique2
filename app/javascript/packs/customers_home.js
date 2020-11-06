@@ -11,4 +11,4 @@ document.addEventListener('DOMContentLoaded',async function(){
   await homePage.build();
   
 
-},{once:true});
+});
