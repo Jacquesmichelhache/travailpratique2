@@ -1,0 +1,13 @@
+
+<tr>
+   <td><%= customer.name   %></td>
+   <td><%= customer.relationshipstart   %></td>
+   <td><%= customer.activitytype   %></td>
+   <td><%= customer.infoemail   %></td>
+   <td>
+      <div class="d-flex- flex-row flex-nowrap align-items-between">
+         <%= link_to "edit", edit_customer_path(customer.id)%>
+         <%= link_to "delete", customer, method:"delete" %>
+      </div>
+   </td>  
+</tr>

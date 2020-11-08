@@ -1,2 +1,6 @@
 module StaticPagesHelper
+
+ 
+
+
 end

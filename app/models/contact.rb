@@ -1,5 +1,5 @@
 class Contact < ApplicationRecord
- belongs_to :customer
+  belongs_to :customer
 
  validates  :name, presence: {message: "A name must be defined"}
  validates  :firstname, presence: {message: "A first name must be defined"}
@@ -9,6 +9,5 @@ class Contact < ApplicationRecord
       format: { with: VALID_EMAIL_REGEX , message: "Email format is invalid" }
 
  validates :ext, numericality: {message:"Extension must be of numerical value"}
-
-
+ 
 end

@@ -10,28 +10,35 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
      
+   
   </head>
   
 
-  <body>
-  <div id="snackbar" style="z-index:1000"></div>
-    <%= render 'layouts/header' %>  
-    <div class="container">
-       <%= yield %>
-    </div>   
-  </body>
+  <body> 
 
-    
+
+    <div id="snackbar" style="z-index:1000"></div>
+    <%= render 'layouts/header' %>  
+
+    <div class="container">
+      <% flash.each do |message_type, message| %>
+      <%= content_tag(:div, message, class: "alert alert-#{message_type}") %>
+      <% end %>
+
+      <%= yield %>
+    </div>   
+
+   
+  </body>    
+
+  <script>
+    $(function(){ 
+      $('.calendarField').datepicker( {
+        locale: "en",
+        sideBySIde: true,
+        dateFormat: 'dd-m-yy' });
+    })
+  </script>
   
 </html>
 
-<script>
-  //provides applicating with routing urls and paths
-  try{
-    let routes = JSON.parse('<%= raw(@routes.to_json) %>')
-    window.appRoutes = routes
-  }catch(e){
-
-  }
-
-</script>

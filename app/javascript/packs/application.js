@@ -20,11 +20,9 @@ require('webpack-jquery-ui');
 require('webpack-jquery-ui/css');
 
 
-
 // import jQuery from "jquery";
 global.$ = global.jQuery = jQuery;
 window.$ = window.jQuery = jQuery;
-
 
 
 

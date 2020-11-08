@@ -1,7 +1,44 @@
-<div name="header" class="login_title">Customers list</div>
+<p id="notice"><%= notice %></p>
 
-<div name="body"  id="customer_app"></div>
+<p>
+  <strong>Name:</strong>
+  <%= @customer.name %>
+</p>
 
-</div name="footer" ><div>
+<p>
+  <strong>Relationshipstart:</strong>
+  <%= @customer.relationshipstart %>
+</p>
 
-<%= javascript_pack_tag 'customers_home' %>
+<p>
+  <strong>Addresscity:</strong>
+  <%= @customer.addresscity %>
+</p>
+
+<p>
+  <strong>Addresspostalcode:</strong>
+  <%= @customer.addresspostalcode %>
+</p>
+
+<p>
+  <strong>Addressstreet:</strong>
+  <%= @customer.addressstreet %>
+</p>
+
+<p>
+  <strong>Addressapt:</strong>
+  <%= @customer.addressapt %>
+</p>
+
+<p>
+  <strong>Activitytype:</strong>
+  <%= @customer.activitytype %>
+</p>
+
+<p>
+  <strong>Infoemail:</strong>
+  <%= @customer.infoemail %>
+</p>
+
+<%= link_to 'Edit', edit_customer_path(@customer) %> |
+<%= link_to 'Back', customers_path %>

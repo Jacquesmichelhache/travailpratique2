@@ -1,6 +1,10 @@
 const { environment } = require('@rails/webpacker')
 const webpack = require("webpack");
 
+
+const erb = require('./loaders/erb')
+
+
 // Add an additional plugin of your choosing : ProvidePlugin
 environment.plugins.append(
   "Provide",
@@ -12,10 +16,6 @@ environment.plugins.append(
   })
 );
 
-// const aliasConfig = {
-//   'jquery': 'jquery-ui/external/jquery-3.1.0/jquery.js',  
-// };
-
-//  environment.config.set('resolve.alias', aliasConfig);
+environment.loaders.prepend('erb', erb)
 
 module.exports = environment

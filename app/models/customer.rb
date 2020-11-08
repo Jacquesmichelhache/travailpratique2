@@ -1,4 +1,5 @@
 class Customer < ApplicationRecord
+
   #relations
   belongs_to :user
   has_many :contacts, dependent: :restrict_with_exception 
@@ -40,4 +41,5 @@ class Customer < ApplicationRecord
     end
 
 
+    
 end

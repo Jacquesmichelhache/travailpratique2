@@ -1,0 +1,59 @@
+<%= form_with(model: customer, local: true) do |form| %>
+  <% if customer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(customer.errors.count, "error") %> errors</h2>
+
+      <ul>
+        <% customer.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name , class: 'form-control'%>
+  </div>
+
+  <div class="field">
+    <%= form.label :"Start date" %>
+    <%= form.text_field :relationshipstart, {autocomplete: "disabled", readonly: "readonly",class: 'form-control calendarField' } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :addresscity %>
+    <%= form.text_field :addresscity , class: 'form-control'%>
+  </div>
+
+  <div class="field">
+    <%= form.label :addresspostalcode %>
+    <%= form.text_field :addresspostalcode , class: 'form-control'%>
+  </div>
+
+  <div class="field">
+    <%= form.label :addressstreet %>
+    <%= form.text_field :addressstreet , class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :addressapt %>
+    <%= form.text_field :addressapt , class: 'form-control'%>
+  </div>
+
+  <div class="field">
+    <%= form.label :"Activity type" %>            
+    <%= form.select(:activitytype,  Customer.activitytypes.to_a,{},{class: 'form-control'}) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :infoemail %>
+    <%= form.text_field :infoemail , class: 'form-control'%>
+  </div>
+
+
+  <div class="d-flex flex-column align-items-center actions" style="margin-top:20px">
+    <%= form.submit "Submit",  {class: "btn btn-primary"} %>
+  </div>
+<% end %>
+
