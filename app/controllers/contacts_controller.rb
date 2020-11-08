@@ -1,5 +1,7 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+
 
   # GET /contacts
   # GET /contacts.json
@@ -17,6 +19,7 @@ class ContactsController < ApplicationController
 
   # GET /contacts/new
   def new
+    @customer = Customer.find(params[:customer_id])
     @contact = Contact.new
   end
 
@@ -27,12 +30,14 @@ class ContactsController < ApplicationController
 
   # POST /contacts
   # POST /contacts.json
-  def create
-    @contact = Contact.new(contact_params)
+  def create    
+    @customer = Customer.find(params[:customer_id])
+    @contact = @customer.contacts.build(contact_params)
 
     respond_to do |format|
       if @contact.save
-        format.html { redirect_to @contact, notice: 'Contact was successfully created.' }
+        flash[:success]  = "Contact was successfully created."
+        format.html { redirect_to contacts_url(customer_id: params[:customer_id])}
         format.json { render :show, status: :created, location: @contact }
       else
         format.html { render :new }

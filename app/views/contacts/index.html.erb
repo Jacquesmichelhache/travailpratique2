@@ -1,6 +1,8 @@
 
 <%= render 'shared/customer_edit_header'%>
 
+ <%= link_to "New Contact",new_contact_path(customer_id:@customer.id) ,  {class:"btn btn-sm btn-dark",disable_with:"Loading.."}  %>
+
 <h1>Contacts</h1>
 
  <table class="table table-striped table-bordered table-responsive-lg" style="margin-top:20px">
