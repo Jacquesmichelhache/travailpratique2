@@ -5,7 +5,10 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
-    @customers = Customer.all
+
+
+    
+    @customers = current_user.customers.all
  
   end
 
