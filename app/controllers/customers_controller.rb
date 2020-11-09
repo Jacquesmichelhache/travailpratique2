@@ -1,15 +1,36 @@
 class CustomersController < ApplicationController
   before_action :set_customer, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_action :restrict_access, only: [:show, :edit, :update, :destroy]
+  
 
   # GET /customers
   # GET /customers.json
-  def index
+  def index    
+  
+    #default values
+    @sortCol = "name" unless params[:sort_col]
+    @sortDir = "1" unless params[:sort_dir] 
+    @filter = ""
 
+    #override default values
+    @sortDir = params[:sort_dir]  if params[:sort_dir]  != nil
+    @sortCol = params[:sort_col]  if params[:sort_col]  != nil
+    @filter = params[:filter] if params[:filter]  != nil
 
+    #augment filter with wildcards
+    filter_with_wildcards = "%" + @filter + "%"   
     
-    @customers = current_user.customers.all
- 
+    #get customers
+    @customers = current_user.customers.where(["name like ? or activitytype like ? or infoemail like ?", 
+      filter_with_wildcards,filter_with_wildcards,filter_with_wildcards])
+
+    #sort array
+    @customers =  @customers.sort_by{|x| x[@sortCol] }   
+    
+    #reverse order if sort is descending
+    @customers = @customers.reverse if @sortDir.to_i == -1  
+
   end
 
   # GET /customers/1
@@ -63,6 +84,7 @@ class CustomersController < ApplicationController
   # DELETE /customers/1.json
   def destroy
     begin
+     
       @customer.destroy
 
       respond_to do |format|
@@ -77,6 +99,14 @@ class CustomersController < ApplicationController
   end
 
   private
+    def restrict_access     
+
+      if current_user.customers.exists?(@customer.id) == false then
+        flash[:danger] = "Access denied"
+        redirect_to root_path
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
       @customer = Customer.find(params[:id])
