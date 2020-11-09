@@ -20,13 +20,15 @@ export let overlayFactory = function (userOptions = {}) {
   let bootstrapCol = document.createElement("div");
   let rowFlex = document.createElement("div"); 
   let flexPanel = document.createElement("div"); 
+  
     
-  //styling
+  //styling (className are defined in same order as they appear in the DOM)
+  overlay.className = "overlay";  
   bootstrapRow.className = "row no-gutter login_row"
   bootstrapCol.className = "col-sm-12 col-md-8 offset-md-2"
   rowFlex.className = "d-flex flex-row justify-content-center"
   flexPanel.className = "d-flex flex-column align-items-center justify-content-center overlay-ctn"
-  overlay.className = "overlay";    
+    
 
   rowFlex.style.width = "100%"
 
@@ -41,7 +43,7 @@ export let overlayFactory = function (userOptions = {}) {
       //close overlay if user mousedown on it, or apply user settings otherwise
       if (e.path[0] == bootstrapRow || e.path[0] == overlay || 
           e.path[0] == rowFlex || e.path[0] ==  bootstrapCol) {
-            
+
           if (options.clickBackgroundToClose === true) {
               $(overlay).fadeOut(250, function () {
                   if (options.removeWhenClosed === true) {

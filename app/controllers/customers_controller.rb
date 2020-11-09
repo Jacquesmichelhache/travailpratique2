@@ -5,12 +5,14 @@ class CustomersController < ApplicationController
   
   #GET
   def show 
+    #returns the customer home page view 
   end
 
 
 
   #POST
   def all
+    #returns an array of hashes, each hash containing all of the customer attributes
 
     if current_user != nil then  
       value = current_user.customers.collect{|x| x.attributes}
@@ -23,7 +25,8 @@ class CustomersController < ApplicationController
 
   #DELETE
   def destroy
-    
+    #returns a success message
+
     id = params[:id]   
     
     begin
@@ -44,6 +47,7 @@ class CustomersController < ApplicationController
 
   #POST
   def update
+    #returns a customer object
 
     #get filtered parameters
     p = customer_params
@@ -70,11 +74,13 @@ class CustomersController < ApplicationController
 
   #POST
   def creationform
-
+    #returns a partial view converted as a string
     @new_customer = current_user.customers.build()
 
     begin
-      htmlString = render_to_string(partial: 'customers/new_customer_form',:formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
+      htmlString = render_to_string(partial: 'customers/new_customer_form',
+          :formats => [:html], layout: false, locals:{:@new_customer => @new_customer})
+
       render json: success("Creation form successfully generated",htmlString)
     
     rescue Exception => e
@@ -84,10 +90,12 @@ class CustomersController < ApplicationController
   end
 
   def editform   
-
+    #returns a partial view converted as a string
     begin
       @cust = current_user.customers.find(params[:id])
-      htmlString = render_to_string(partial: 'customers/edit_customer_form',:formats => [:html], layout: false, locals:{:@cust => @cust})
+      htmlString = render_to_string(partial: 'customers/edit_customer_form',
+          :formats => [:html], layout: false, locals:{:@cust => @cust})
+
       render json: success("successfully retrieved customer information", htmlString)
 
     rescue Exception => e
@@ -99,6 +107,8 @@ class CustomersController < ApplicationController
 
   #POST
   def create
+    #returns a success message
+
     p = customer_params
 
     #validate the model before commiting the changes
@@ -111,7 +121,6 @@ class CustomersController < ApplicationController
    
 
     if new_customer.valid? then
-
       new_customer.save
       render json: success( "Successfully created a customer", nil)      
     else    

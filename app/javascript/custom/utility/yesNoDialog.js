@@ -14,7 +14,7 @@ export function yesNoDialog(clientParams= {}){
   //the yesNoDialog waits, in a non-blocking way for a YES or NO response 
   return new Promise((resolve,reject)=>{
     let overlay = document.createElement("div");
-    let title = document.createElement("h2");
+    let title = document.createElement("h4");
     let dialogContainer = document.createElement("div");
     let footer = document.createElement("div");
     let yesButton = document.createElement("button");

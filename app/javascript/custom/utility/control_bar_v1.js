@@ -25,7 +25,7 @@ export let control_bar_v1 = (function(){
 
     function createHtml(){
       let flexContainer = document.createElement("div")
-      let filterInput = document.createElement("input")
+      let filterInput = document.createElement("input")     
       let newBtn = document.createElement("button")
 
       flexContainer.className = "d-flex flex-row align-items-end justify-content-between";

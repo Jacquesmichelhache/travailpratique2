@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   post '/contacts/customer_contacts', to: 'contacts#customer_contacts' #ajax 
   post '/contacts/update', to: 'contacts#update' #ajax 
   post '/contacts/editform', to: 'contacts#editform' #ajax 
-  post   '/contacts/createForm', to: 'contacts#createForm' #ajax 
+  post '/contacts/createForm', to: 'contacts#createForm' #ajax 
 
   
 

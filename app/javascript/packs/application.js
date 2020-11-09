@@ -19,7 +19,7 @@ let jQuery = require("jquery");
 require('webpack-jquery-ui');
 require('webpack-jquery-ui/css');
 
-
+import "@fortawesome/fontawesome-free/js/all";
 
 // import jQuery from "jquery";
 global.$ = global.jQuery = jQuery;

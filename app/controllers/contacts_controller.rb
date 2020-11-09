@@ -1,11 +1,6 @@
 class ContactsController < ApplicationController
   include ApplicationHelper
 
-  #GET
-  def show 
-
-
-  end
  
 
   #POST
@@ -28,8 +23,10 @@ class ContactsController < ApplicationController
       
       @new_contact = @customer.contacts.build()
     
-      htmlString = render_to_string(partial: 'contacts/new_form', :formats => [:html], layout: false, 
-                                      locals: {:@new_contact => @new_contact, :@customer => @customer})
+      htmlString = render_to_string(partial: 'contacts/new_form', 
+          :formats => [:html], 
+          layout: false, 
+          locals: {:@new_contact => @new_contact, :@customer => @customer})
 
       render json: success("Successfully retrieved contact form", htmlString)        
     rescue Exception => e
@@ -44,7 +41,9 @@ class ContactsController < ApplicationController
     begin
       @cont= Contact.find(params[:contact_id])
 
-      htmlString = render_to_string(partial: 'contacts/edit_form',:formats => [:html], layout: false, locals:{:@contact => @cont})
+      htmlString = render_to_string(partial: 'contacts/edit_form',
+            :formats => [:html], layout: false, locals:{:@contact => @cont})
+
       render json: success("Successfully retrieved contact information", htmlString) 
      
     rescue Exception => e
@@ -111,14 +110,17 @@ class ContactsController < ApplicationController
      
     rescue ActiveRecord::RecordNotFound
       render json: fail("Contact not found in database")  
-     
+
     rescue ActiveRecord::DeleteRestrictionError 
       #An assumption is made here that the customer has contacts
-      render json: fail("Deletion of this contact is restricted")       
+      render json: fail("Deletion of this contact is restricted")  
+
     rescue ActiveRecord::RecordNotDestroyed
       render json: fail("Contact could not be deleted. contact admin")    
+
     rescue Exception => e
       render json: fail(e.message)     
+
     end
 
   end

@@ -51,7 +51,7 @@ export let customersHomeFactory = (function homeAPI(){
       //params is an agGrid object of interface ICellRendererParams. see more at:
       //https://www.ag-grid.com/javascript-grid-cell-rendering-components/
 
-      let result = await yesNoDialog();
+      let result = await yesNoDialog({title:"Do you really want to delete this customer?"});
 
       if(result === "yes"){
 
