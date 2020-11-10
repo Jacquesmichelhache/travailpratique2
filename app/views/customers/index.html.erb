@@ -1,57 +1,59 @@
 
-<h1>Customers</h1>
+  <h1>Customers</h1>
 
- <%= link_to "New Customer",new_customer_path ,  {class:"btn btn-sm btn-dark",disable_with:"Loading.."}  %>
+  <%= link_to "New Customer",new_customer_path ,  {class:"btn btn-sm btn-dark",disable_with:"Loading.."}  %>
 
-  <% if @customers.any? %>
+    <% if @customers.any? %>
 
-  <%= form_with url: customers_path(), method: :get, local: true do |form| %>
-    
-    <%= hidden_field_tag 'sort_col', @sortCol %>
-    <%= hidden_field_tag 'sort_dir', @sortDir %>
-    <%= text_field_tag("filter", @filter, {class:"form-control", style:"width:150px;margin-top:20px", placeholder:"filter.."})%>
+    <%= form_with url: customers_path(), method: :get, local: true do |form| %>    
+      <%= hidden_field_tag 'sort_col', @sortCol %>
+      <%= hidden_field_tag 'sort_dir', @sortDir %>
+      <%= text_field_tag("filter", @filter, {class:"form-control", style:"width:150px;margin-top:20px", placeholder:"filter.."})%>
+    <% end %> 
+
+
+    <table id="customers-table" class="table table-striped table-bordered table-responsive-lg" style="margin-top:20px">
+
+      <thead>
+        <tr>
+          <th>
+            <div class="d-flex flex-row align-items-center" style="width:100%">
+              <%= link_to 'Name', customers_path(:sort_col => :name, :sort_dir => -1 * @sortDir.to_i, :filter => @filter) %>   
+            </div>
+          </th>
+          <th>
+            <%= link_to 'Start Date', customers_path(:sort_col => :startdate, :sort_dir => -1 * @sortDir.to_i, :filter => @filter) %> 
+          </th>
+          <th>
+              <%= link_to 'Activity Type', customers_path(:sort_col => :activitytype, :sort_dir => -1 * @sortDir.to_i, :filter => @filter)  %>         
+          </th>
+          <th>
+            <%= link_to 'Email', customers_path(:sort_col => :infoemail, :sort_dir => -1 * @sortDir.to_i, :filter => @filter) %>
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>  
+
+      <tbody>
+        <% @customers.each do |customer| %>
+        <tr>
+          <td><%= customer.name %></td>
+          <td><%= customer.relationshipstart.strftime("%d/%m/%Y") %></td>      
+          <td><%= customer.activitytype %></td>
+          <td><%= customer.infoemail %></td>     
+          <td><%= link_to 'Edit', edit_customer_path(customer) %></td>
+          <td><%= link_to 'delete', customer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+
+    </table>
+
+    </table>
+
   <% end %>
 
-  <table id="customers-table" class="table table-striped table-bordered table-responsive-lg" style="margin-top:20px">
 
-    <thead>
-      <tr>
-        <th>
-          <div class="d-flex flex-row align-items-center" style="width:100%">
-            <%= link_to 'Name', customers_path(:sort_col => :name, :sort_dir => -1 * @sortDir.to_i, :filter => @filter) %>   
-          </div>
-        </th>
-        <th>
-          <%= link_to 'Start Date', customers_path(:sort_col => :startdate, :sort_dir => -1 * @sortDir.to_i, :filter => @filter) %> 
-        </th>
-        <th>
-            <%= link_to 'Activity Type', customers_path(:sort_col => :activitytype, :sort_dir => -1 * @sortDir.to_i, :filter => @filter)  %>         
-        </th>
-        <th>
-          <%= link_to 'Email', customers_path(:sort_col => :infoemail, :sort_dir => -1 * @sortDir.to_i, :filter => @filter) %>
-        </th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>  
-
-    <tbody>
-      <% @customers.each do |customer| %>
-      <tr>
-        <td><%= customer.name %></td>
-        <td><%= customer.relationshipstart.strftime("%d/%m/%Y") %></td>      
-        <td><%= customer.activitytype %></td>
-        <td><%= customer.infoemail %></td>     
-        <td><%= link_to 'Edit', edit_customer_path(customer) %></td>
-        <td><%= link_to 'delete', customer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-
-  </table>
-
-  </table>
-
-<% end %>
 
 
 

@@ -1,39 +1,42 @@
 
-<%= render 'shared/customer_edit_header'%>
 
- <%= link_to "New Contact",new_contact_path(customer_id:@customer.id) ,  {class:"btn btn-sm btn-dark",disable_with:"Loading.."}  %>
+  <%= render 'shared/customer_edit_header'%>
 
-<h1>Contacts</h1>
+  <%= link_to "New Contact",new_contact_path(customer_id:@customer.id) ,  {class:"btn btn-sm btn-dark",disable_with:"Loading.."}  %>
 
- <table class="table table-striped table-bordered table-responsive-lg" style="margin-top:20px">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Firstname</th>
-      <th>Email</th>
-      <th>Tel</th>
-      <th>Ext</th>
-      <th></th>
-        <th></th>
-    </tr>
-  </thead>
+  <h1>Contacts</h1>
 
-  <tbody>
-    <% @contacts.each do |contact| %>
+  <table class="table table-striped table-bordered table-responsive-lg" style="margin-top:20px">
+    <thead>
       <tr>
-        <td><%= contact.name %></td>
-        <td><%= contact.firstname %></td>
-        <td><%= contact.email %></td>
-        <td><%= contact.tel %></td>
-        <td><%= contact.ext %></td>      
-        <td><%= link_to 'Edit', edit_contact_path(contact, customer_id:@customer.id ) %></td>
-        <td><%= link_to 'Delete', contact_path(contact.id, customer_id:@customer.id), data: { confirm: 'Are you sure?' }, method: :delete %></td>
+        <th>Name</th>
+        <th>Firstname</th>
+        <th>Email</th>
+        <th>Tel</th>
+        <th>Ext</th>
+        <th></th>
+          <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @contacts.each do |contact| %>
+        <tr>
+          <td><%= contact.name %></td>
+          <td><%= contact.firstname %></td>
+          <td><%= contact.email %></td>
+          <td><%= contact.tel %></td>
+          <td><%= contact.ext %></td>      
+          <td><%= link_to 'Edit', edit_contact_path(contact, customer_id:@customer.id ) %></td>
+          <td><%= link_to 'Delete', contact_path(contact.id, customer_id:@customer.id), data: { confirm: 'Are you sure?' }, method: :delete %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= link_to 'Home', customers_path %>
+  <br>
+
+  <%= link_to 'Home', customers_path %>
+
+
 

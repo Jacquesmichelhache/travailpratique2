@@ -26,3 +26,16 @@ window.$ = window.jQuery = jQuery;
 
 
 
+$(document).on('turbolinks:load',(e)=>{  
+  console.log("page is loaded!!")
+
+  $(".smooth-loading").fadeIn(250,()=>{
+   
+  });
+});
+
+
+
+
+
+

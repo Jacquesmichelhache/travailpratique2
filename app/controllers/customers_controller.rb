@@ -46,6 +46,10 @@ class CustomersController < ApplicationController
 
   # GET /customers/1/edit
   def edit
+    respond_to do |format|     
+      format.html 
+      format.json { render :show, status: :created, location: @customer }     
+    end
   end
 
   # POST /customers
@@ -56,7 +60,8 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save
-        format.html { redirect_to @customer, notice: 'Customer was successfully created.' }
+        flash[:success]  = "Customer was successfully updated."
+        format.html { redirect_to customers_path }
         format.json { render :show, status: :created, location: @customer }
       else
         format.html { render :new }
@@ -71,7 +76,7 @@ class CustomersController < ApplicationController
     respond_to do |format|
       if @customer.update(customer_params)
         flash[:success]  = "Customer was successfully updated."
-        format.html { redirect_to root_path }
+        format.html { redirect_to customers_path }
         format.json { render :show, status: :ok, location: @customer }
       else
         format.html { render :edit }
